@@ -1,8 +1,11 @@
 {
   "main.js": {
-    "file": "assets/kmh-chowdeck-relay-s-w-BE0j5-4F.js",
+    "file": "assets/kmh-chowdeck-relay-s-w-BuEbclvG.js",
     "name": "kmh-chowdeck-relay-s-w",
     "src": "main.js",
-    "isEntry": true
+    "isEntry": true,
+    "css": [
+      "assets/kmh-chowdeck-relay-s-w-BirprZip.css"
+    ]
   }
 }

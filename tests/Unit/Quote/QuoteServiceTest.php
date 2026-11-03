@@ -26,7 +26,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
+use Shopware\Core\Checkout\Cart\LineItem\LineItem;
+use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
+use Shopware\Core\Checkout\Order\Aggregate\OrderLineItem\OrderLineItemCollection;
+use Shopware\Core\Checkout\Order\Aggregate\OrderLineItem\OrderLineItemEntity;
+use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Notification\NotificationService;
+use Shopware\Core\System\Country\Aggregate\CountryState\CountryStateEntity;
+use Shopware\Core\System\Country\CountryEntity;
+use Shopware\Core\System\Currency\CurrencyEntity;
+use Shopware\Core\Checkout\Cart\Delivery\Struct\ShippingLocation;
+use Shopware\Core\Test\Generator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -156,6 +166,21 @@ class QuoteServiceTest extends TestCase
         static::assertSame(0, $this->notifications);
     }
 
+    public function testContextWithoutAnAddressIsIncomplete(): void
+    {
+        $context = CheckoutFixture::context();
+        $country = new CountryEntity();
+        $country->setId('country-ng');
+        $country->setIso('NG');
+        $withoutAddress = Generator::generateSalesChannelContext(
+            currency: $context->getCurrency(),
+            shippingMethod: $context->getShippingMethod(),
+            shippingLocation: ShippingLocation::createFromCountry($country),
+        );
+
+        static::assertSame(QuoteError::IncompleteAddress, $this->service(self::CONFIG, [])->quote(CheckoutFixture::cart(), $withoutAddress));
+    }
+
     public function testAddressChowdeckCannotFindIsInvalidAndNotCached(): void
     {
         $refusal = static fn () => ClientFactory::json(['status' => 'failed', 'message' => 'Could not find coordinates for destination address'], 400);
@@ -184,6 +209,75 @@ class QuoteServiceTest extends TestCase
         static::assertSame(QuoteError::Unavailable, $service->quote(CheckoutFixture::cart(), CheckoutFixture::context()));
         static::assertSame('error', $this->logs[0][0]);
         static::assertStringNotContainsString('sk_test_key', (string)json_encode($this->logs));
+    }
+
+    /**
+     * Request rider takes a fresh fee for the placed order, never from the cache.
+     */
+    public function testFeeForAnOrderIsNeverCached(): void
+    {
+        $service = $this->service(self::CONFIG + ['insureParcels' => true], [ClientFactory::ok(self::FEE), ClientFactory::ok(self::FEE)]);
+
+        $fee = $service->feeForOrder($this->order(), $this->orderAddress());
+        $service->feeForOrder($this->order(), $this->orderAddress());
+
+        static::assertInstanceOf(DeliveryFee::class, $fee);
+        static::assertSame(4800.0, $fee->totalAmount);
+        static::assertCount(2, $this->feeBodies);
+        static::assertSame('15 Herbert Macaulay Way, Yaba, Lagos, 101245, Nigeria', $this->feeBodies[0]['destination_address_string']);
+        // One product line item of 12,000; the shipping line is not declared.
+        static::assertSame(1200000, $this->feeBodies[0]['estimated_order_amount']);
+    }
+
+    public function testFeeForAnOrderChecksCurrencySetupAndAddress(): void
+    {
+        $service = $this->service(self::CONFIG, []);
+
+        static::assertSame(QuoteError::CurrencyMismatch, $service->feeForOrder($this->order('EUR'), $this->orderAddress()));
+        static::assertSame(QuoteError::IncompleteAddress, $service->feeForOrder($this->order(), $this->orderAddress('')));
+        static::assertSame(QuoteError::NotConfigured, $this->service(['apiKey' => 'k'], [])->feeForOrder($this->order(), $this->orderAddress()));
+        static::assertNull($service->declaredValue($this->order()));
+        static::assertSame([], $this->feeBodies);
+    }
+
+    private function order(string $currency = 'NGN'): OrderEntity
+    {
+        $product = new OrderLineItemEntity();
+        $product->setId('li1');
+        $product->setType(LineItem::PRODUCT_LINE_ITEM_TYPE);
+        $product->setTotalPrice(12000.0);
+        $promotion = new OrderLineItemEntity();
+        $promotion->setId('li2');
+        $promotion->setType(LineItem::PROMOTION_LINE_ITEM_TYPE);
+        $promotion->setTotalPrice(-500.0);
+        $currencyEntity = new CurrencyEntity();
+        $currencyEntity->setIsoCode($currency);
+
+        $order = new OrderEntity();
+        $order->setId('order-1');
+        $order->setSalesChannelId('sc-1');
+        $order->setCurrency($currencyEntity);
+        $order->setLineItems(new OrderLineItemCollection([$product, $promotion]));
+
+        return $order;
+    }
+
+    private function orderAddress(string $phone = '+2348031234567'): OrderAddressEntity
+    {
+        $country = new CountryEntity();
+        $country->setIso('NG');
+        $state = new CountryStateEntity();
+        $state->setName('Lagos');
+        $address = new OrderAddressEntity();
+        $address->setId('oa1');
+        $address->setStreet('15 Herbert Macaulay Way');
+        $address->setCity('Yaba');
+        $address->setZipcode('101245');
+        $address->setPhoneNumber($phone);
+        $address->setCountry($country);
+        $address->setCountryState($state);
+
+        return $address;
     }
 
     /**

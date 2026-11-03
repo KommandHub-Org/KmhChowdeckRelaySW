@@ -3,3 +3,7 @@
 kmh_chowdeck_administration:
     resource: ../../Administration/Controller/
     type: attribute
+
+kmh_chowdeck_webhook:
+    resource: ../../Webhook/Controller/
+    type: attribute

@@ -46,6 +46,8 @@ class ShippingMethodInstaller
         $existingId = $this->findId($context);
 
         if ($existingId !== null) {
+            $this->addTrackingUrl($existingId, $context);
+
             return;
         }
 
@@ -58,9 +60,10 @@ class ShippingMethodInstaller
             'taxType' => 'auto',
             'name' => ChowdeckShippingMethod::NAME_EN,
             'description' => ChowdeckShippingMethod::DESCRIPTION_EN,
+            'trackingUrl' => ChowdeckShippingMethod::TRACKING_URL,
             'translations' => [
-                'en-GB' => ['name' => ChowdeckShippingMethod::NAME_EN, 'description' => ChowdeckShippingMethod::DESCRIPTION_EN],
-                'de-DE' => ['name' => ChowdeckShippingMethod::NAME_DE, 'description' => ChowdeckShippingMethod::DESCRIPTION_DE],
+                'en-GB' => ['name' => ChowdeckShippingMethod::NAME_EN, 'description' => ChowdeckShippingMethod::DESCRIPTION_EN, 'trackingUrl' => ChowdeckShippingMethod::TRACKING_URL],
+                'de-DE' => ['name' => ChowdeckShippingMethod::NAME_DE, 'description' => ChowdeckShippingMethod::DESCRIPTION_DE, 'trackingUrl' => ChowdeckShippingMethod::TRACKING_URL],
             ],
             'prices' => [[
                 'calculation' => 1,
@@ -93,6 +96,21 @@ class ShippingMethodInstaller
         }
 
         $this->shippingMethodRepository->update([['id' => $id, 'active' => $active]], $context);
+    }
+
+    /**
+     * Methods installed before tracking links existed get one, unless the
+     * merchant already entered a tracking URL.
+     */
+    private function addTrackingUrl(string $id, Context $context): void
+    {
+        $method = $this->shippingMethodRepository->search(new Criteria([$id]), $context)->getEntities()->first();
+
+        if ($method === null || ($method->getTrackingUrl() ?? '') !== '') {
+            return;
+        }
+
+        $this->shippingMethodRepository->update([['id' => $id, 'trackingUrl' => ChowdeckShippingMethod::TRACKING_URL]], $context);
     }
 
     private function findId(Context $context): ?string

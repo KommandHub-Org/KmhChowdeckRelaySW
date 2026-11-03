@@ -14,3 +14,7 @@ Shopware.Service().register('kmhChowdeckConfigService', (container) => {
 
 import './acl';
 import './component/kmh-chowdeck-connection-test';
+import './component/kmh-chowdeck-webhook-info';
+import './component/kmh-chowdeck-order-delivery';
+import './extension/sw-order-detail-general';
+import './extension/flow-builder';

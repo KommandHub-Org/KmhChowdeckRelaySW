@@ -25,6 +25,10 @@
         <component name="kmh-chowdeck-connection-test">
             <name>connectionTest</name>
         </component>
+
+        <component name="kmh-chowdeck-webhook-info">
+            <name>webhookInfo</name>
+        </component>
     </card>
 
     <card>

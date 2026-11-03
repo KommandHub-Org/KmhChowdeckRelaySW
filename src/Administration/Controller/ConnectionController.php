@@ -7,6 +7,7 @@ namespace Kommandhub\ChowdeckRelaySW\Administration\Controller;
 use Kommandhub\ChowdeckRelaySW\Client\ChowdeckClient;
 use Kommandhub\ChowdeckRelaySW\Client\Dto\WalletBalance;
 use Kommandhub\ChowdeckRelaySW\Exception\ChowdeckApiException;
+use Kommandhub\ChowdeckRelaySW\Webhook\Service\WebhookReceiver;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Routing\ApiRouteScope;
 use Shopware\Core\PlatformRequest;
@@ -17,7 +18,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Admin API behind the plugin configuration page (spec §13.8): test the saved
- * API key by reading the Relay wallet balance.
+ * API key by reading the Relay wallet balance, and tell when the last
+ * webhook arrived.
  *
  * Answers 200 with `success: false` and a reason on a Chowdeck failure, so the
  * config page can show it inline. The response never contains the API key:
@@ -31,6 +33,7 @@ class ConnectionController extends AbstractController
 {
     public function __construct(
         private readonly ChowdeckClient $client,
+        private readonly WebhookReceiver $webhookReceiver,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -59,5 +62,16 @@ class ConnectionController extends AbstractController
         }
 
         return new JsonResponse(['success' => true, 'balance' => $balance->balance, 'currency' => WalletBalance::CURRENCY]);
+    }
+
+    #[Route(
+        path: '/api/_action/kmh-chowdeck/webhook-status',
+        name: 'api.action.kmh_chowdeck.webhook_status',
+        defaults: ['_acl' => ['system_config:read']],
+        methods: ['GET'],
+    )]
+    public function webhookStatus(): JsonResponse
+    {
+        return new JsonResponse(['lastReceivedAt' => $this->webhookReceiver->lastReceivedAt()]);
     }
 }

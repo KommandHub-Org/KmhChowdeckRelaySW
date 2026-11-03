@@ -6,6 +6,54 @@
       "saveFirst": "Enregistrez d'abord les paramètres ; le test utilise la clé API enregistrée.",
       "connectionOk": "Connecté à Chowdeck. Solde du portefeuille : {balance} {currency}",
       "requestFailed": "La requête vers le serveur Shopware a échoué."
+    },
+    "webhook": {
+      "url": "URL du webhook",
+      "urlHelp": "Collez cette URL chez Chowdeck : tableau de bord Settings > Developer settings pour une clé live, ou les URL de webhook de test de la console sandbox pour une clé de test. Les mises à jour des coursiers arrivent alors seules dans la boutique.",
+      "noDomain": "Ajoutez d'abord un domaine storefront à ce canal de vente.",
+      "lastReceived": "Dernière mise à jour de Chowdeck : {date}",
+      "neverReceived": "Aucune mise à jour reçue de Chowdeck pour l'instant."
+    },
+    "flow": {
+      "requestRider": "Demander un coursier Chowdeck",
+      "requestRiderHelp": "Demande un coursier Chowdeck pour chaque livraison Chowdeck de la commande qui n'en a pas encore. Le coursier arrive tout de suite : utilisez un déclencheur qui intervient quand le colis est prêt. Une livraison dont le prix a changé reste à confirmer dans la commande."
+    },
+    "delivery": {
+      "title": "Chowdeck",
+      "status": "Statut",
+      "charged": "Facturé au client",
+      "chowdeckPrice": "Prix Chowdeck",
+      "rider": "Coursier",
+      "pin": "PIN de livraison",
+      "tracking": "Suivi",
+      "openTracking": "Ouvrir la page de suivi",
+      "refund": "Remboursé au portefeuille",
+      "request": "Demander un coursier",
+      "requestHint": "Un coursier arrive tout de suite : demandez-le quand le colis est prêt.",
+      "refresh": "Actualiser le statut",
+      "cancel": "Annuler la livraison",
+      "priceTitle": "Confirmer le nouveau prix Chowdeck",
+      "priceText": "Chowdeck facture maintenant {new} pour cette livraison (avant {old}).",
+      "priceCharged": "Le prix de livraison payé par le client ne change pas. Demander le coursier au nouveau prix ?",
+      "priceConfirm": "Demander un coursier",
+      "cancelTitle": "Annuler la livraison ?",
+      "cancelText": "Chowdeck rembourse les frais de livraison sur votre portefeuille. Une livraison ne peut plus être annulée une fois le colis récupéré.",
+      "cancelConfirm": "Annuler la livraison",
+      "done": {
+        "request": "Coursier demandé à Chowdeck.",
+        "refresh": "Statut actualisé depuis Chowdeck.",
+        "cancel": "Livraison annulée."
+      },
+      "statuses": {
+        "quoted": "Aucun coursier demandé",
+        "needs_quote": "Prix à confirmer",
+        "preparing": "Recherche d'un coursier",
+        "awaiting_pickup": "Coursier en route vers l'enlèvement",
+        "picked_up": "En route vers le client",
+        "arrived": "Coursier chez le client",
+        "completed": "Livré",
+        "cancelled": "Annulé"
+      }
     }
   },
   "sw-privileges": {

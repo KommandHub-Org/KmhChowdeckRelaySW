@@ -11,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\IdSearchResult;
+use Shopware\Core\Checkout\Shipping\ShippingMethodCollection;
+use Shopware\Core\Checkout\Shipping\ShippingMethodEntity;
 use Shopware\Core\Framework\Uuid\Uuid;
 
 #[CoversClass(ShippingMethodInstaller::class)]
@@ -68,10 +71,11 @@ class ShippingMethodInstallerTest extends TestCase
     /**
      * An update must not undo the merchant's rename, activation or channel choice.
      */
-    public function testInstallLeavesExistingMethodAlone(): void
+    public function testInstallLeavesExistingMethodAloneWhenItHasATrackingUrl(): void
     {
         $shippingMethods = $this->createMock(EntityRepository::class);
         $shippingMethods->method('searchIds')->willReturn($this->ids([Uuid::randomHex()]));
+        $shippingMethods->method('search')->willReturn($this->methods('https://merchant.example/track/%s'));
         $shippingMethods->expects(static::never())->method('create');
         $shippingMethods->expects(static::never())->method('update');
         $salesChannels = $this->createMock(EntityRepository::class);
@@ -80,12 +84,28 @@ class ShippingMethodInstallerTest extends TestCase
         (new ShippingMethodInstaller($shippingMethods, $this->createStub(EntityRepository::class), $salesChannels))->install(Context::createDefaultContext());
     }
 
-    public function testNewMethodGetsTheDescription(): void
+    public function testInstallAddsTheTrackingUrlToAnExistingMethodWithoutOne(): void
+    {
+        $id = Uuid::randomHex();
+        $shippingMethods = $this->createMock(EntityRepository::class);
+        $shippingMethods->method('searchIds')->willReturn($this->ids([$id]));
+        $shippingMethods->method('search')->willReturnOnConsecutiveCalls($this->methods(null), $this->methods(null, false));
+        $shippingMethods->expects(static::once())->method('update')->with([['id' => $id, 'trackingUrl' => ChowdeckShippingMethod::TRACKING_URL]]);
+
+        $installer = new ShippingMethodInstaller($shippingMethods, $this->createStub(EntityRepository::class), $this->createStub(EntityRepository::class));
+        $installer->install(Context::createDefaultContext());
+        // A method that disappeared between the lookups is skipped.
+        $installer->install(Context::createDefaultContext());
+    }
+
+    public function testNewMethodGetsTheTrackingUrlAndDescription(): void
     {
         $shippingMethods = $this->createMock(EntityRepository::class);
         $shippingMethods->method('searchIds')->willReturn($this->ids([]));
         $shippingMethods->expects(static::once())->method('create')->with(static::callback(
-            static fn (array $payload): bool => $payload[0]['description'] === ChowdeckShippingMethod::DESCRIPTION_EN
+            static fn (array $payload): bool => $payload[0]['trackingUrl'] === ChowdeckShippingMethod::TRACKING_URL
+                && $payload[0]['translations']['en-GB']['trackingUrl'] === ChowdeckShippingMethod::TRACKING_URL
+                && $payload[0]['description'] === ChowdeckShippingMethod::DESCRIPTION_EN
                 && $payload[0]['translations']['de-DE']['description'] === ChowdeckShippingMethod::DESCRIPTION_DE
         ));
         $empty = $this->createStub(EntityRepository::class);
@@ -113,6 +133,19 @@ class ShippingMethodInstallerTest extends TestCase
 
         $installer = new ShippingMethodInstaller($shippingMethods, $this->createStub(EntityRepository::class), $this->createStub(EntityRepository::class));
         $installer->setActive(true, Context::createDefaultContext());
+    }
+
+    /**
+     * @return EntitySearchResult<ShippingMethodCollection>
+     */
+    private function methods(?string $trackingUrl, bool $found = true): EntitySearchResult
+    {
+        $method = new ShippingMethodEntity();
+        $method->setId(Uuid::randomHex());
+        $method->setTrackingUrl($trackingUrl);
+        $collection = new ShippingMethodCollection($found ? [$method] : []);
+
+        return new EntitySearchResult('shipping_method', $collection->count(), $collection, null, new Criteria(), Context::createDefaultContext());
     }
 
     /**

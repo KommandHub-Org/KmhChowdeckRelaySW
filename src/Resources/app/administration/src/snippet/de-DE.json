@@ -6,6 +6,54 @@
       "saveFirst": "Speichern Sie die Einstellungen zuerst; der Test verwendet den gespeicherten API-Schlüssel.",
       "connectionOk": "Mit Chowdeck verbunden. Wallet-Guthaben: {balance} {currency}",
       "requestFailed": "Die Anfrage an den Shopware-Server ist fehlgeschlagen."
+    },
+    "webhook": {
+      "url": "Webhook-URL",
+      "urlHelp": "Fügen Sie diese URL bei Chowdeck ein: im Dashboard unter Settings > Developer settings für einen Live-Schlüssel, oder bei den Test-Webhook-URLs der Sandbox-Konsole für einen Testschlüssel. Statusmeldungen der Fahrer kommen dann von selbst im Shop an.",
+      "noDomain": "Legen Sie zuerst eine Storefront-Domain für diesen Verkaufskanal an.",
+      "lastReceived": "Letzte Meldung von Chowdeck: {date}",
+      "neverReceived": "Noch keine Meldung von Chowdeck erhalten."
+    },
+    "flow": {
+      "requestRider": "Chowdeck-Fahrer anfordern",
+      "requestRiderHelp": "Fordert für jede Chowdeck-Lieferung der Bestellung, die noch keinen hat, einen Chowdeck-Fahrer an. Der Fahrer kommt sofort, also wählen Sie einen Auslöser, der greift, wenn das Paket gepackt ist. Eine Lieferung mit geändertem Preis bleibt zur Bestätigung in der Bestellung."
+    },
+    "delivery": {
+      "title": "Chowdeck",
+      "status": "Status",
+      "charged": "Dem Kunden berechnet",
+      "chowdeckPrice": "Chowdeck-Preis",
+      "rider": "Fahrer",
+      "pin": "Liefer-PIN",
+      "tracking": "Sendungsverfolgung",
+      "openTracking": "Verfolgungsseite öffnen",
+      "refund": "Ans Wallet erstattet",
+      "request": "Fahrer anfordern",
+      "requestHint": "Ein Fahrer kommt sofort: fordern Sie ihn an, wenn das Paket gepackt ist.",
+      "refresh": "Status aktualisieren",
+      "cancel": "Lieferung stornieren",
+      "priceTitle": "Neuen Chowdeck-Preis bestätigen",
+      "priceText": "Chowdeck berechnet für diese Lieferung jetzt {new} (vorher {old}).",
+      "priceCharged": "Der vom Kunden bezahlte Versandpreis ändert sich nicht. Fahrer zum neuen Preis anfordern?",
+      "priceConfirm": "Fahrer anfordern",
+      "cancelTitle": "Lieferung stornieren?",
+      "cancelText": "Chowdeck erstattet die Liefergebühr an Ihr Wallet. Hat der Fahrer das Paket abgeholt, kann nicht mehr storniert werden.",
+      "cancelConfirm": "Lieferung stornieren",
+      "done": {
+        "request": "Fahrer bei Chowdeck angefordert.",
+        "refresh": "Status von Chowdeck aktualisiert.",
+        "cancel": "Lieferung storniert."
+      },
+      "statuses": {
+        "quoted": "Kein Fahrer angefordert",
+        "needs_quote": "Preis bestätigen",
+        "preparing": "Fahrer wird gesucht",
+        "awaiting_pickup": "Fahrer auf dem Weg zur Abholung",
+        "picked_up": "Unterwegs zum Kunden",
+        "arrived": "Fahrer beim Kunden",
+        "completed": "Zugestellt",
+        "cancelled": "Storniert"
+      }
     }
   },
   "sw-privileges": {

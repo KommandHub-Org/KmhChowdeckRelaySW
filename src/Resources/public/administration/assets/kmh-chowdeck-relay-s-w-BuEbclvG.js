@@ -1,0 +1,95 @@
+const l={"kmh-chowdeck":{title:"Chowdeck Relay Rider Delivery",config:{testConnection:"Test connection",saveFirst:"Save the settings first; the test uses the saved API key.",connectionOk:"Connected to Chowdeck. Wallet balance: {balance} {currency}",requestFailed:"The request to the Shopware server failed."},webhook:{url:"Webhook URL",urlHelp:"Paste this URL into Chowdeck: dashboard Settings > Developer settings for a live key, or the sandbox console's test webhook URLs for a test key. Rider status updates then reach the shop by themselves.",noDomain:"Add a storefront domain to this sales channel first.",lastReceived:"Last update from Chowdeck: {date}",neverReceived:"No update from Chowdeck received yet."},flow:{requestRider:"Request Chowdeck rider",requestRiderHelp:"Requests a Chowdeck rider for every Chowdeck delivery of the order that has none yet. A rider comes at once, so use a trigger that fires when the parcel is packed. A delivery whose price changed is left for you to confirm in the order."},delivery:{title:"Chowdeck",status:"Status",charged:"Charged to customer",chowdeckPrice:"Chowdeck price",rider:"Rider",pin:"Delivery PIN",tracking:"Tracking",openTracking:"Open tracking page",refund:"Refunded to wallet",request:"Request rider",requestHint:"A rider comes at once: request one when the parcel is packed.",refresh:"Refresh status",cancel:"Cancel delivery",priceTitle:"Confirm new Chowdeck price",priceText:"Chowdeck now charges {new} for this delivery (was {old}).",priceCharged:"The shipping price the customer paid does not change. Request the rider at the new price?",priceConfirm:"Request rider",cancelTitle:"Cancel delivery?",cancelText:"Chowdeck refunds the delivery fee to your wallet. A delivery can no longer be cancelled once the rider has collected the parcel.",cancelConfirm:"Cancel delivery",done:{request:"Rider requested from Chowdeck.",refresh:"Status updated from Chowdeck.",cancel:"Delivery cancelled."},statuses:{quoted:"No rider requested",needs_quote:"Price to confirm",preparing:"Finding a rider",awaiting_pickup:"Rider on the way to pickup",picked_up:"On the way to the customer",arrived:"Rider at the customer",completed:"Delivered",cancelled:"Cancelled"}}},"sw-privileges":{permissions:{kmh_chowdeck_delivery:{label:"Chowdeck rider deliveries"}}}},h={"kmh-chowdeck":{title:"Chowdeck Relay Kurierlieferung",config:{testConnection:"Verbindung testen",saveFirst:"Speichern Sie die Einstellungen zuerst; der Test verwendet den gespeicherten API-Schlüssel.",connectionOk:"Mit Chowdeck verbunden. Wallet-Guthaben: {balance} {currency}",requestFailed:"Die Anfrage an den Shopware-Server ist fehlgeschlagen."},webhook:{url:"Webhook-URL",urlHelp:"Fügen Sie diese URL bei Chowdeck ein: im Dashboard unter Settings > Developer settings für einen Live-Schlüssel, oder bei den Test-Webhook-URLs der Sandbox-Konsole für einen Testschlüssel. Statusmeldungen der Fahrer kommen dann von selbst im Shop an.",noDomain:"Legen Sie zuerst eine Storefront-Domain für diesen Verkaufskanal an.",lastReceived:"Letzte Meldung von Chowdeck: {date}",neverReceived:"Noch keine Meldung von Chowdeck erhalten."},flow:{requestRider:"Chowdeck-Fahrer anfordern",requestRiderHelp:"Fordert für jede Chowdeck-Lieferung der Bestellung, die noch keinen hat, einen Chowdeck-Fahrer an. Der Fahrer kommt sofort, also wählen Sie einen Auslöser, der greift, wenn das Paket gepackt ist. Eine Lieferung mit geändertem Preis bleibt zur Bestätigung in der Bestellung."},delivery:{title:"Chowdeck",status:"Status",charged:"Dem Kunden berechnet",chowdeckPrice:"Chowdeck-Preis",rider:"Fahrer",pin:"Liefer-PIN",tracking:"Sendungsverfolgung",openTracking:"Verfolgungsseite öffnen",refund:"Ans Wallet erstattet",request:"Fahrer anfordern",requestHint:"Ein Fahrer kommt sofort: fordern Sie ihn an, wenn das Paket gepackt ist.",refresh:"Status aktualisieren",cancel:"Lieferung stornieren",priceTitle:"Neuen Chowdeck-Preis bestätigen",priceText:"Chowdeck berechnet für diese Lieferung jetzt {new} (vorher {old}).",priceCharged:"Der vom Kunden bezahlte Versandpreis ändert sich nicht. Fahrer zum neuen Preis anfordern?",priceConfirm:"Fahrer anfordern",cancelTitle:"Lieferung stornieren?",cancelText:"Chowdeck erstattet die Liefergebühr an Ihr Wallet. Hat der Fahrer das Paket abgeholt, kann nicht mehr storniert werden.",cancelConfirm:"Lieferung stornieren",done:{request:"Fahrer bei Chowdeck angefordert.",refresh:"Status von Chowdeck aktualisiert.",cancel:"Lieferung storniert."},statuses:{quoted:"Kein Fahrer angefordert",needs_quote:"Preis bestätigen",preparing:"Fahrer wird gesucht",awaiting_pickup:"Fahrer auf dem Weg zur Abholung",picked_up:"Unterwegs zum Kunden",arrived:"Fahrer beim Kunden",completed:"Zugestellt",cancelled:"Storniert"}}},"sw-privileges":{permissions:{kmh_chowdeck_delivery:{label:"Chowdeck-Fahrerlieferungen"}}}},u={"kmh-chowdeck":{title:"Chowdeck Relay Rider Delivery",config:{testConnection:"Tester la connexion",saveFirst:"Enregistrez d'abord les paramètres ; le test utilise la clé API enregistrée.",connectionOk:"Connecté à Chowdeck. Solde du portefeuille : {balance} {currency}",requestFailed:"La requête vers le serveur Shopware a échoué."},webhook:{url:"URL du webhook",urlHelp:"Collez cette URL chez Chowdeck : tableau de bord Settings > Developer settings pour une clé live, ou les URL de webhook de test de la console sandbox pour une clé de test. Les mises à jour des coursiers arrivent alors seules dans la boutique.",noDomain:"Ajoutez d'abord un domaine storefront à ce canal de vente.",lastReceived:"Dernière mise à jour de Chowdeck : {date}",neverReceived:"Aucune mise à jour reçue de Chowdeck pour l'instant."},flow:{requestRider:"Demander un coursier Chowdeck",requestRiderHelp:"Demande un coursier Chowdeck pour chaque livraison Chowdeck de la commande qui n'en a pas encore. Le coursier arrive tout de suite : utilisez un déclencheur qui intervient quand le colis est prêt. Une livraison dont le prix a changé reste à confirmer dans la commande."},delivery:{title:"Chowdeck",status:"Statut",charged:"Facturé au client",chowdeckPrice:"Prix Chowdeck",rider:"Coursier",pin:"PIN de livraison",tracking:"Suivi",openTracking:"Ouvrir la page de suivi",refund:"Remboursé au portefeuille",request:"Demander un coursier",requestHint:"Un coursier arrive tout de suite : demandez-le quand le colis est prêt.",refresh:"Actualiser le statut",cancel:"Annuler la livraison",priceTitle:"Confirmer le nouveau prix Chowdeck",priceText:"Chowdeck facture maintenant {new} pour cette livraison (avant {old}).",priceCharged:"Le prix de livraison payé par le client ne change pas. Demander le coursier au nouveau prix ?",priceConfirm:"Demander un coursier",cancelTitle:"Annuler la livraison ?",cancelText:"Chowdeck rembourse les frais de livraison sur votre portefeuille. Une livraison ne peut plus être annulée une fois le colis récupéré.",cancelConfirm:"Annuler la livraison",done:{request:"Coursier demandé à Chowdeck.",refresh:"Statut actualisé depuis Chowdeck.",cancel:"Livraison annulée."},statuses:{quoted:"Aucun coursier demandé",needs_quote:"Prix à confirmer",preparing:"Recherche d'un coursier",awaiting_pickup:"Coursier en route vers l'enlèvement",picked_up:"En route vers le client",arrived:"Coursier chez le client",completed:"Livré",cancelled:"Annulé"}}},"sw-privileges":{permissions:{kmh_chowdeck_delivery:{label:"Livraisons Chowdeck par coursier"}}}},{Classes:n}=Shopware;class m extends n.ApiService{constructor(r,t){super(r,t,"kmh-chowdeck"),this.name="kmhChowdeckConfigService"}testConnection(r){return this.httpClient.post("_action/kmh-chowdeck/test-connection",{salesChannelId:r},{headers:this.getBasicHeaders()}).then(t=>n.ApiService.handleResponse(t))}webhookStatus(){return this.httpClient.get("_action/kmh-chowdeck/webhook-status",{headers:this.getBasicHeaders()}).then(r=>n.ApiService.handleResponse(r))}deliveryAction(r,t,i={}){return this.httpClient.post(`_action/kmh-chowdeck/delivery/${r}/${t}`,i,{headers:this.getBasicHeaders()}).then(s=>n.ApiService.handleResponse(s))}}Shopware.Service("privileges").addPrivilegeMappingEntry({category:"permissions",parent:"orders",key:"kmh_chowdeck_delivery",roles:{viewer:{privileges:["kmh_chowdeck_delivery:read"],dependencies:["order.viewer"]},editor:{privileges:["kmh_chowdeck_delivery:update"],dependencies:["kmh_chowdeck_delivery.viewer"]}}});function o(e){let r=e.$parent;for(;r;){if("actualConfigData"in r&&"currentSalesChannelId"in r)return r;r=r.$parent}return null}function d(e){var r;return((r=o(e))==null?void 0:r.currentSalesChannelId)??null}Shopware.Component.register("kmh-chowdeck-connection-test",{template:`
+        <div class="kmh-chowdeck-connection-test">
+            <mt-button variant="secondary" :is-loading="isLoading" @click="run">
+                {{ $tc('kmh-chowdeck.config.testConnection') }}
+            </mt-button>
+            <p class="sw-field__hint">{{ $tc('kmh-chowdeck.config.saveFirst') }}</p>
+        </div>
+    `,inject:["kmhChowdeckConfigService"],mixins:[Shopware.Mixin.getByName("notification")],data(){return{isLoading:!1}},methods:{async run(){this.isLoading=!0;try{const e=await this.kmhChowdeckConfigService.testConnection(d(this));e.success?this.createNotificationSuccess({message:this.$t("kmh-chowdeck.config.connectionOk",{balance:e.balance,currency:e.currency})}):this.createNotificationError({message:e.message})}catch{this.createNotificationError({message:this.$tc("kmh-chowdeck.config.requestFailed")})}finally{this.isLoading=!1}}}});const{Criteria:c}=Shopware.Data;Shopware.Component.register("kmh-chowdeck-webhook-info",{template:`
+        <div class="kmh-chowdeck-webhook-info">
+            <mt-text-field
+                :label="$tc('kmh-chowdeck.webhook.url')"
+                :model-value="url || $tc('kmh-chowdeck.webhook.noDomain')"
+                :help-text="$tc('kmh-chowdeck.webhook.urlHelp')"
+                disabled
+                copyable
+            />
+            <p class="sw-field__hint">
+                {{ lastReceivedAt
+                    ? $t('kmh-chowdeck.webhook.lastReceived', { date: formatDate(lastReceivedAt) })
+                    : $tc('kmh-chowdeck.webhook.neverReceived') }}
+            </p>
+        </div>
+    `,inject:["repositoryFactory","kmhChowdeckConfigService"],data(){return{url:null,lastReceivedAt:null}},computed:{salesChannelId(){var e;return((e=o(this))==null?void 0:e.currentSalesChannelId)??null}},watch:{salesChannelId(){this.loadUrl()}},created(){this.loadUrl(),this.kmhChowdeckConfigService.webhookStatus().then(e=>{this.lastReceivedAt=e.lastReceivedAt}).catch(()=>{this.lastReceivedAt=null})},methods:{async loadUrl(){const e=d(this),r=new c(1,1).addFilter(c.prefix("url","http"));e&&r.addFilter(c.equals("salesChannelId",e));const t=(await this.repositoryFactory.create("sales_channel_domain").search(r,Shopware.Context.api)).first();this.url=t?`${t.url.replace(/\/$/,"")}/kmh-chowdeck/webhook/${e||"default"}`:null},formatDate(e){return Shopware.Utils.format.date(e)}}});const{Criteria:a}=Shopware.Data;Shopware.Component.register("kmh-chowdeck-order-delivery",{template:`
+        <mt-card v-if="deliveries.length" :title="$tc('kmh-chowdeck.delivery.title')" :is-loading="isLoading" class="kmh-chowdeck-order-delivery">
+            <div v-for="delivery in deliveries" :key="delivery.id" class="kmh-chowdeck-order-delivery__item">
+                <sw-description-list grid="1fr 2fr">
+                    <dt>{{ $tc('kmh-chowdeck.delivery.status') }}</dt>
+                    <dd>{{ statusLabel(delivery.status) }}</dd>
+                    <dt>{{ $tc('kmh-chowdeck.delivery.charged') }}</dt>
+                    <dd>{{ money(delivery.chargedAmount) }}</dd>
+                    <dt>{{ $tc('kmh-chowdeck.delivery.chowdeckPrice') }}</dt>
+                    <dd>{{ money(delivery.quotedAmount) }}</dd>
+                    <template v-if="delivery.rider && (delivery.rider.name || delivery.rider.phone)">
+                        <dt>{{ $tc('kmh-chowdeck.delivery.rider') }}</dt>
+                        <dd>{{ [delivery.rider.name, delivery.rider.phone].filter(Boolean).join(', ') }}</dd>
+                    </template>
+                    <template v-if="delivery.deliveryPin">
+                        <dt>{{ $tc('kmh-chowdeck.delivery.pin') }}</dt>
+                        <dd>{{ delivery.deliveryPin }}</dd>
+                    </template>
+                    <template v-if="delivery.trackingUrl">
+                        <dt>{{ $tc('kmh-chowdeck.delivery.tracking') }}</dt>
+                        <dd><a :href="delivery.trackingUrl" target="_blank" rel="noopener">{{ $tc('kmh-chowdeck.delivery.openTracking') }}</a></dd>
+                    </template>
+                    <template v-if="delivery.refundAmount !== null && delivery.refundAmount !== undefined">
+                        <dt>{{ $tc('kmh-chowdeck.delivery.refund') }}</dt>
+                        <dd>{{ money(delivery.refundAmount) }}</dd>
+                    </template>
+                </sw-description-list>
+
+                <mt-banner v-if="delivery.errorMessage" variant="critical" class="kmh-chowdeck-order-delivery__error">
+                    {{ delivery.errorMessage }}
+                </mt-banner>
+
+                <div v-if="canEdit" class="kmh-chowdeck-order-delivery__actions">
+                    <mt-button v-if="isRequestable(delivery)" variant="primary" size="small" :is-loading="busyId === delivery.id" @click="request(delivery, false)">
+                        {{ $tc('kmh-chowdeck.delivery.request') }}
+                    </mt-button>
+                    <mt-button v-if="delivery.reference" variant="secondary" size="small" :is-loading="busyId === delivery.id" @click="refresh(delivery)">
+                        {{ $tc('kmh-chowdeck.delivery.refresh') }}
+                    </mt-button>
+                    <mt-button v-if="isCancellable(delivery)" variant="critical" size="small" :disabled="busyId === delivery.id" @click="cancelTarget = delivery">
+                        {{ $tc('kmh-chowdeck.delivery.cancel') }}
+                    </mt-button>
+                </div>
+                <p v-if="canEdit && isRequestable(delivery)" class="sw-field__hint">{{ $tc('kmh-chowdeck.delivery.requestHint') }}</p>
+            </div>
+
+            <sw-modal v-if="priceChange" :title="$tc('kmh-chowdeck.delivery.priceTitle')" variant="small" @modal-close="priceChange = null">
+                <p>{{ $t('kmh-chowdeck.delivery.priceText', { old: money(priceChange.oldPrice), new: money(priceChange.newPrice) }) }}</p>
+                <p>{{ $tc('kmh-chowdeck.delivery.priceCharged') }}</p>
+                <template #modal-footer>
+                    <mt-button size="small" variant="secondary" @click="priceChange = null">{{ $tc('global.default.cancel') }}</mt-button>
+                    <mt-button size="small" variant="primary" :is-loading="busyId !== null" @click="confirmPrice">{{ $tc('kmh-chowdeck.delivery.priceConfirm') }}</mt-button>
+                </template>
+            </sw-modal>
+
+            <sw-modal v-if="cancelTarget" :title="$tc('kmh-chowdeck.delivery.cancelTitle')" variant="small" @modal-close="cancelTarget = null">
+                <p>{{ $tc('kmh-chowdeck.delivery.cancelText') }}</p>
+                <template #modal-footer>
+                    <mt-button size="small" variant="secondary" @click="cancelTarget = null">{{ $tc('global.default.cancel') }}</mt-button>
+                    <mt-button size="small" variant="critical" :is-loading="busyId !== null" @click="cancel">{{ $tc('kmh-chowdeck.delivery.cancelConfirm') }}</mt-button>
+                </template>
+            </sw-modal>
+        </mt-card>
+    `,inject:["repositoryFactory","acl","kmhChowdeckConfigService"],mixins:[Shopware.Mixin.getByName("notification")],props:{orderId:{type:String,required:!0}},data(){return{deliveries:[],isLoading:!1,busyId:null,priceChange:null,cancelTarget:null}},computed:{repository(){return this.repositoryFactory.create("kmh_chowdeck_delivery")},canEdit(){return this.acl.can("kmh_chowdeck_delivery.editor")}},watch:{orderId(){this.load()}},created(){this.load()},methods:{async load(){this.isLoading=!0;try{const e=new a(1,25).addFilter(a.equals("orderId",this.orderId));this.deliveries=Array.from(await this.repository.search(e,Shopware.Context.api))}finally{this.isLoading=!1}},isRequestable(e){return["quoted","needs_quote"].includes(e.status)},isCancellable(e){return["preparing","awaiting_pickup"].includes(e.status)},statusLabel(e){return this.$tc(`kmh-chowdeck.delivery.statuses.${e}`)},money(e){return e==null?"–":Shopware.Utils.format.currency(Number(e),"NGN")},async request(e,r){const t=await this.act(e,"request",{confirmed:r});t!=null&&t.success&&!t.requested&&(this.priceChange={...t,deliveryId:e.id})},async confirmPrice(){const e=this.deliveries.find(r=>r.id===this.priceChange.deliveryId);this.priceChange=null,await this.request(e,!0)},async refresh(e){await this.act(e,"refresh")},async cancel(){const e=this.cancelTarget;this.cancelTarget=null,await this.act(e,"cancel")},async act(e,r,t={}){this.busyId=e.id;try{const i=await this.kmhChowdeckConfigService.deliveryAction(e.id,r,t);return i.success?(r!=="request"||i.requested)&&this.createNotificationSuccess({message:this.$tc(`kmh-chowdeck.delivery.done.${r}`)}):this.createNotificationError({message:i.message}),i}catch{return this.createNotificationError({message:this.$tc("kmh-chowdeck.config.requestFailed")}),null}finally{this.busyId=null,await this.load()}}}});const k=`{% block sw_order_detail_general_line_items_card %} {% parent %} <kmh-chowdeck-order-delivery v-if="$route.params.id && acl.can('kmh_chowdeck_delivery.viewer')" :order-id="$route.params.id" /> {% endblock %}`;Shopware.Component.override("sw-order-detail-general",{template:k});Shopware.Application.addServiceProviderDecorator("flowBuilderService",e=>(e.addLabels({kmhChowdeckRequest_rider:"kmh-chowdeck.flow.requestRider"}),e.addIcons({kmhChowdeckRequest_rider:"regular-truck"}),e));Shopware.Component.register("sw-flow-kmh-chowdeck-request_rider-modal",{template:`
+        <sw-modal :title="$tc('kmh-chowdeck.flow.requestRider')" variant="small" @modal-close="$emit('modal-close')">
+            <p>{{ $tc('kmh-chowdeck.flow.requestRiderHelp') }}</p>
+            <template #modal-footer>
+                <mt-button size="small" variant="secondary" @click="$emit('modal-close')">{{ $tc('global.default.cancel') }}</mt-button>
+                <mt-button size="small" variant="primary" @click="save">{{ $tc('global.default.save') }}</mt-button>
+            </template>
+        </sw-modal>
+    `,props:{sequence:{type:Object,required:!0}},emits:["modal-close","process-finish"],methods:{save(){this.$emit("process-finish",{...this.sequence,config:{}})}}});Shopware.Locale.extend("en-GB",l);Shopware.Locale.extend("de-DE",h);Shopware.Locale.extend("fr-FR",u);Shopware.Service().register("kmhChowdeckConfigService",e=>{const r=Shopware.Application.getContainer("init");return new m(r.httpClient,e.loginService)});
+//# sourceMappingURL=kmh-chowdeck-relay-s-w-BuEbclvG.js.map

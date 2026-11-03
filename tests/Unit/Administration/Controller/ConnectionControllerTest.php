@@ -14,6 +14,7 @@ use Kommandhub\ChowdeckRelaySW\Client\Resource\ApiResource;
 use Kommandhub\ChowdeckRelaySW\Client\Resource\Wallet;
 use Kommandhub\ChowdeckRelaySW\Exception\ChowdeckApiException;
 use Kommandhub\ChowdeckRelaySW\Setting\Service\Config;
+use Kommandhub\ChowdeckRelaySW\Webhook\Service\WebhookReceiver;
 use Kommandhub\ChowdeckRelaySW\Tests\Unit\Client\ClientFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -77,6 +78,11 @@ class ConnectionControllerTest extends TestCase
         static::assertSame('not_configured', $this->decode($controller->testConnection(new Request()))['reason']);
     }
 
+    public function testWebhookStatus(): void
+    {
+        static::assertSame(['lastReceivedAt' => '2026-11-03T20:00:00+00:00'], $this->decode($this->controller(new MockResponse('{}'))->webhookStatus()));
+    }
+
     private function controller(MockResponse $response, string $apiKey = ClientFactory::API_KEY): ConnectionController
     {
         $config = ClientFactory::config(['apiKey' => $apiKey]);
@@ -96,7 +102,10 @@ class ConnectionControllerTest extends TestCase
             }
         };
 
-        return new ConnectionController($client, $logger);
+        $receiver = $this->createStub(WebhookReceiver::class);
+        $receiver->method('lastReceivedAt')->willReturn('2026-11-03T20:00:00+00:00');
+
+        return new ConnectionController($client, $receiver, $logger);
     }
 
     /**

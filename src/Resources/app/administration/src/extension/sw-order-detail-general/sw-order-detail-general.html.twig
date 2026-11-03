@@ -1,0 +1,7 @@
+{% block sw_order_detail_general_line_items_card %}
+    {% parent %}
+
+    <kmh-chowdeck-order-delivery
+        v-if="$route.params.id && acl.can('kmh_chowdeck_delivery.viewer')"
+        :order-id="$route.params.id" />
+{% endblock %}

@@ -15,4 +15,16 @@ export default class ChowdeckConfigService extends Classes.ApiService {
             .post('_action/kmh-chowdeck/test-connection', { salesChannelId }, { headers: this.getBasicHeaders() })
             .then((response) => Classes.ApiService.handleResponse(response));
     }
+
+    webhookStatus() {
+        return this.httpClient
+            .get('_action/kmh-chowdeck/webhook-status', { headers: this.getBasicHeaders() })
+            .then((response) => Classes.ApiService.handleResponse(response));
+    }
+
+    deliveryAction(deliveryId, action, payload = {}) {
+        return this.httpClient
+            .post(`_action/kmh-chowdeck/delivery/${deliveryId}/${action}`, payload, { headers: this.getBasicHeaders() })
+            .then((response) => Classes.ApiService.handleResponse(response));
+    }
 }

@@ -57,3 +57,18 @@ services:
   Kommandhub\ChowdeckRelaySW\Shipping\ChowdeckDeliveryProcessor:
     tags:
       - { name: 'shopware.cart.processor', priority: -6000 }
+
+  Kommandhub\ChowdeckRelaySW\Administration\Controller\DeliveryController:
+    public: true
+    calls:
+      - [setContainer, ['@service_container']]
+
+  Kommandhub\ChowdeckRelaySW\Webhook\Controller\WebhookController:
+    public: true
+    calls:
+      - [setContainer, ['@service_container']]
+
+  # The key must equal getName(), or Flow Builder silently skips the action.
+  Kommandhub\ChowdeckRelaySW\Flow\RequestRiderAction:
+    tags:
+      - { name: 'flow.action', priority: 600, key: 'action.kmh.chowdeck.request_rider' }

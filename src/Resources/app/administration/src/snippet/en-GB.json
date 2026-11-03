@@ -6,6 +6,54 @@
       "saveFirst": "Save the settings first; the test uses the saved API key.",
       "connectionOk": "Connected to Chowdeck. Wallet balance: {balance} {currency}",
       "requestFailed": "The request to the Shopware server failed."
+    },
+    "webhook": {
+      "url": "Webhook URL",
+      "urlHelp": "Paste this URL into Chowdeck: dashboard Settings > Developer settings for a live key, or the sandbox console's test webhook URLs for a test key. Rider status updates then reach the shop by themselves.",
+      "noDomain": "Add a storefront domain to this sales channel first.",
+      "lastReceived": "Last update from Chowdeck: {date}",
+      "neverReceived": "No update from Chowdeck received yet."
+    },
+    "flow": {
+      "requestRider": "Request Chowdeck rider",
+      "requestRiderHelp": "Requests a Chowdeck rider for every Chowdeck delivery of the order that has none yet. A rider comes at once, so use a trigger that fires when the parcel is packed. A delivery whose price changed is left for you to confirm in the order."
+    },
+    "delivery": {
+      "title": "Chowdeck",
+      "status": "Status",
+      "charged": "Charged to customer",
+      "chowdeckPrice": "Chowdeck price",
+      "rider": "Rider",
+      "pin": "Delivery PIN",
+      "tracking": "Tracking",
+      "openTracking": "Open tracking page",
+      "refund": "Refunded to wallet",
+      "request": "Request rider",
+      "requestHint": "A rider comes at once: request one when the parcel is packed.",
+      "refresh": "Refresh status",
+      "cancel": "Cancel delivery",
+      "priceTitle": "Confirm new Chowdeck price",
+      "priceText": "Chowdeck now charges {new} for this delivery (was {old}).",
+      "priceCharged": "The shipping price the customer paid does not change. Request the rider at the new price?",
+      "priceConfirm": "Request rider",
+      "cancelTitle": "Cancel delivery?",
+      "cancelText": "Chowdeck refunds the delivery fee to your wallet. A delivery can no longer be cancelled once the rider has collected the parcel.",
+      "cancelConfirm": "Cancel delivery",
+      "done": {
+        "request": "Rider requested from Chowdeck.",
+        "refresh": "Status updated from Chowdeck.",
+        "cancel": "Delivery cancelled."
+      },
+      "statuses": {
+        "quoted": "No rider requested",
+        "needs_quote": "Price to confirm",
+        "preparing": "Finding a rider",
+        "awaiting_pickup": "Rider on the way to pickup",
+        "picked_up": "On the way to the customer",
+        "arrived": "Rider at the customer",
+        "completed": "Delivered",
+        "cancelled": "Cancelled"
+      }
     }
   },
   "sw-privileges": {

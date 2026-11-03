@@ -19,4 +19,10 @@ final class ChowdeckShippingMethod
     public const DESCRIPTION_EN = 'Same-day delivery by a Chowdeck rider.';
 
     public const DESCRIPTION_DE = 'Lieferung am selben Tag durch einen Chowdeck-Fahrer.';
+
+    /**
+     * Chowdeck's tracking URL pattern is undocumented, so the full tracking
+     * link is stored as the tracking code and Shopware fills it in as is.
+     */
+    public const TRACKING_URL = '%s';
 }
