@@ -1,0 +1,23 @@
+{
+  "base": "/bundles/kmhchowdeckrelaysw/administration/",
+  "entryPoints": {
+    "kmh-chowdeck-relay-s-w": {
+      "css": [],
+      "dynamic": [],
+      "js": [
+        "/bundles/kmhchowdeckrelaysw/administration/assets/kmh-chowdeck-relay-s-w-BE0j5-4F.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

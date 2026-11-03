@@ -1,0 +1,89 @@
+{
+    "name": "kommandhub/chowdeck-relay-sw",
+    "description": "Same-day Chowdeck rider delivery: live Relay delivery prices at checkout, rider requests from the order, tracking links and status updates, all on the merchant's own Chowdeck account.",
+    "type": "shopware-platform-plugin",
+    "version": "0.1.0",
+    "license": "Apache-2.0",
+    "keywords": [
+        "shopware",
+        "shopware6",
+        "shopware-plugin",
+        "chowdeck",
+        "administration",
+        "api-client",
+        "custom-entity",
+        "message-queue",
+        "scheduled-task",
+        "storefront",
+        "webhooks"
+    ],
+    "homepage": "https://github.com/KommandHub-Org/KmhChowdeckRelaySW",
+    "authors": [
+        {
+            "name": "Kommandhub Limited",
+            "email": "admin@kommandhub.com",
+            "homepage": "https://www.kommandhub.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "admin@kommandhub.com",
+        "issues": "https://github.com/KommandHub-Org/KmhChowdeckRelaySW/issues",
+        "source": "https://github.com/KommandHub-Org/KmhChowdeckRelaySW",
+        "docs": "https://github.com/KommandHub-Org/KmhChowdeckRelaySW/blob/main/README.md"
+    },
+    "require": {
+        "php": ">=8.2",
+        "shopware/core": "~6.7.0",
+        "shopware/administration": "~6.7.0",
+        "shopware/storefront": "~6.7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5",
+        "shopware/dev-tools": "^1.5",
+        "friendsofphp/php-cs-fixer": "^3.94",
+        "phpstan/phpstan": "^2.1",
+        "rregeer/phpunit-coverage-check": "^0.3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kommandhub\\ChowdeckRelaySW\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kommandhub\\ChowdeckRelaySW\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Kommandhub\\ChowdeckRelaySW\\KmhChowdeckRelaySW",
+        "label": {
+            "de-DE": "Chowdeck Relay Kurierlieferung",
+            "en-GB": "Chowdeck Relay Rider Delivery",
+            "fr-FR": "Chowdeck Relay Rider Delivery"
+        },
+        "description": {
+            "de-DE": "Kurierlieferung am selben Tag mit Chowdeck: Live-Lieferpreise von Relay im Checkout, Fahreranfrage aus der Bestellung, Tracking-Links und Statusupdates mit dem eigenen Chowdeck-Konto.",
+            "en-GB": "Same-day Chowdeck rider delivery: live Relay delivery prices at checkout, rider requests from the order, tracking links and status updates, all on the merchant's own Chowdeck account.",
+            "fr-FR": "Livraison le jour même par coursier Chowdeck : prix Relay au paiement, demande de coursier depuis la commande, suivi et statuts, avec le compte Chowdeck du marchand."
+        },
+        "manufacturerLink": {
+            "de-DE": "https://www.kommandhub.com",
+            "en-GB": "https://www.kommandhub.com"
+        },
+        "supportLink": {
+            "de-DE": "https://www.kommandhub.com/support",
+            "en-GB": "https://www.kommandhub.com/support"
+        },
+        "copyright": "(c) by Kommandhub Limited"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "symfony/runtime": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

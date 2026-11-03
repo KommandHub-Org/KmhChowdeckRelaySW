@@ -1,0 +1,58 @@
+# Composer dependencies
+/vendor/
+/composer.lock
+
+# Python
+__pycache__/
+/*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+env/
+venv/
+
+# Node.js
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+/build/
+/out/
+
+# Compiled assets that `make zip` (shopware-cli extension zip) regenerates into
+# the source tree during its storefront/admin build. They are build output, not
+# source, and must not be committed from a dev checkout.
+/src/Storefront/Resources/public/
+
+# SQL dumps
+*.sql
+*.sqlite
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.iml
+
+# Ant build
+/build.xml
+/dist/
+
+# Misc
+*.log
+*.tmp
+*.cache
+
+# Claude Code (local, machine-specific)
+# CLAUDE.md is intentionally tracked: it documents contributor conventions.
+# A shared .claude/settings.json may also be committed if the team wants one.
+/.claude/settings.local.json
+/.claude/launch.json

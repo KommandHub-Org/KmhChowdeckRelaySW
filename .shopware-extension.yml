@@ -1,0 +1,42 @@
+# Read by shopware-cli (`make zip`, `make validate-plugin`).
+compatibility_date: '2026-02-11'
+
+# `make zip` packs the working tree (--disable-git), so anything present
+# locally but ignored by git would ship unless it is listed here: dev
+# dependencies installed for PHPStan/php-cs-fixer, coverage reports, caches.
+# The dev-stack and tooling configs are left out because they only make sense
+# in a checkout of this repository, not in an installed plugin.
+#
+# vendor/ is dev-only because composer.json requires nothing besides Shopware
+# itself. If the plugin gains a runtime library in `require`, remove `vendor`
+# below (and add `executeComposerCommands()` to the bootstrap) or the release
+# zip ships without it.
+build:
+  zip:
+    # The committed Resources/public/ bundle is the release asset, built with
+    # Shopware's own build scripts. Letting the CLI rebuild it in a temp folder
+    # ships different files from the ones in git.
+    assets:
+      enabled: false
+    pack:
+      excludes:
+        paths:
+          - vendor
+          - build
+          - node_modules
+          - .phpunit.cache
+          - .php-cs-fixer.cache
+          - .DS_Store
+          - composer.lock
+          - Dockerfile
+          - docker-compose.yml
+          - .dockerignore
+          - .prettierignore
+          - .prettierrc.json
+          - CLAUDE.md
+          - phpcs.dist.xml
+          - phpstan.dist.neon
+          - phpunit.dist.xml
+          # Written by shopware-cli's asset build, which mistakes a plugin's
+          # src/Storefront namespace folder for the core bundle.
+          - src/Storefront/Resources

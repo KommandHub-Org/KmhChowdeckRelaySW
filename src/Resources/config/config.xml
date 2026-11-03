@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/6.7/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Chowdeck account</title>
+        <title lang="de-DE">Chowdeck-Konto</title>
+
+        <input-field type="password">
+            <name>apiKey</name>
+            <label>API key</label>
+            <label lang="de-DE">API-Schlüssel</label>
+            <helpText>Found in your Chowdeck dashboard under Settings > Developer. Rider deliveries are paid from your Chowdeck Relay wallet.</helpText>
+            <helpText lang="de-DE">Zu finden im Chowdeck-Dashboard unter Settings > Developer. Fahrerlieferungen werden aus Ihrem Chowdeck-Relay-Wallet bezahlt.</helpText>
+        </input-field>
+
+        <input-field type="password">
+            <name>webhookSecret</name>
+            <label>Webhook secret</label>
+            <label lang="de-DE">Webhook-Secret</label>
+            <helpText>From the same page in the Chowdeck dashboard. Used to check that status updates really come from Chowdeck.</helpText>
+            <helpText lang="de-DE">Von derselben Seite im Chowdeck-Dashboard. Damit wird geprüft, dass Statusmeldungen wirklich von Chowdeck kommen.</helpText>
+        </input-field>
+
+        <component name="kmh-chowdeck-connection-test">
+            <name>connectionTest</name>
+        </component>
+    </card>
+
+    <card>
+        <title>Pickup</title>
+        <title lang="de-DE">Abholung</title>
+
+        <input-field type="text">
+            <name>pickupAddress</name>
+            <label>Pickup address</label>
+            <label lang="de-DE">Abholadresse</label>
+            <helpText>One line, as a rider would look it up: street and number, area, city, state. Example: 12 Admiralty Way, Lekki Phase 1, Lagos.</helpText>
+            <helpText lang="de-DE">Eine Zeile, so wie ein Fahrer sie sucht: Straße und Hausnummer, Viertel, Stadt, Bundesstaat. Beispiel: 12 Admiralty Way, Lekki Phase 1, Lagos.</helpText>
+        </input-field>
+
+        <input-field type="float">
+            <name>pickupLatitude</name>
+            <label>Pickup latitude (optional)</label>
+            <label lang="de-DE">Breitengrad der Abholung (optional)</label>
+            <helpText>With the longitude, makes the delivery price more exact. Leave empty to use the address only.</helpText>
+            <helpText lang="de-DE">Zusammen mit dem Längengrad wird der Lieferpreis genauer. Leer lassen, um nur die Adresse zu verwenden.</helpText>
+        </input-field>
+
+        <input-field type="float">
+            <name>pickupLongitude</name>
+            <label>Pickup longitude (optional)</label>
+            <label lang="de-DE">Längengrad der Abholung (optional)</label>
+        </input-field>
+
+        <input-field type="text">
+            <name>pickupContactName</name>
+            <label>Contact name</label>
+            <label lang="de-DE">Kontaktname</label>
+            <helpText>The person the rider asks for at pickup.</helpText>
+            <helpText lang="de-DE">Die Person, nach der der Fahrer bei der Abholung fragt.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>pickupContactPhone</name>
+            <label>Contact phone</label>
+            <label lang="de-DE">Kontakttelefon</label>
+        </input-field>
+
+        <input-field type="text">
+            <name>pickupContactEmail</name>
+            <label>Contact email (optional)</label>
+            <label lang="de-DE">Kontakt-E-Mail (optional)</label>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Delivery</title>
+        <title lang="de-DE">Lieferung</title>
+
+        <input-field type="text">
+            <name>itemType</name>
+            <label>Item type</label>
+            <label lang="de-DE">Warenart</label>
+            <defaultValue>others</defaultValue>
+            <helpText>What your shop usually sends, told to Chowdeck with each delivery (for example documents, electronics, food, others).</helpText>
+            <helpText lang="de-DE">Was Ihr Shop üblicherweise versendet; wird Chowdeck bei jeder Lieferung mitgeteilt (zum Beispiel documents, electronics, food, others).</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>useDeliveryPin</name>
+            <label>Delivery PIN</label>
+            <label lang="de-DE">Liefer-PIN</label>
+            <defaultValue>true</defaultValue>
+            <helpText>The customer gets a 4-digit PIN by email and gives it to the rider, who hands over the parcel only with the right PIN.</helpText>
+            <helpText lang="de-DE">Der Kunde erhält eine 4-stellige PIN per E-Mail und nennt sie dem Fahrer, der das Paket nur mit der richtigen PIN übergibt.</helpText>
+        </input-field>
+
+        <input-field type="multi-select">
+            <name>notificationChannels</name>
+            <label>Chowdeck notifies the customer by</label>
+            <label lang="de-DE">Chowdeck benachrichtigt den Kunden per</label>
+            <defaultValue>["sms"]</defaultValue>
+            <options>
+                <option><id>sms</id><name>SMS</name></option>
+                <option><id>email</id><name>Email</name><name lang="de-DE">E-Mail</name></option>
+                <option><id>whatsapp</id><name>WhatsApp</name></option>
+            </options>
+        </input-field>
+
+        <input-field type="bool">
+            <name>insureParcels</name>
+            <label>Declare the order value</label>
+            <label lang="de-DE">Bestellwert angeben</label>
+            <defaultValue>false</defaultValue>
+            <helpText>Chowdeck adds a safety fee to the delivery price and covers loss or damage up to the declared value.</helpText>
+            <helpText lang="de-DE">Chowdeck schlägt eine Sicherheitsgebühr auf den Lieferpreis auf und deckt Verlust oder Beschädigung bis zum angegebenen Wert.</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Checkout price</title>
+        <title lang="de-DE">Preis im Checkout</title>
+
+        <input-field type="single-select">
+            <name>markupType</name>
+            <label>Markup</label>
+            <label lang="de-DE">Aufschlag</label>
+            <defaultValue>none</defaultValue>
+            <options>
+                <option><id>none</id><name>None</name><name lang="de-DE">Kein Aufschlag</name></option>
+                <option><id>fixed</id><name>Fixed amount</name><name lang="de-DE">Fester Betrag</name></option>
+                <option><id>percent</id><name>Percentage</name><name lang="de-DE">Prozentsatz</name></option>
+            </options>
+        </input-field>
+
+        <input-field type="float">
+            <name>markupValue</name>
+            <label>Markup value</label>
+            <label lang="de-DE">Aufschlagswert</label>
+            <defaultValue>0</defaultValue>
+            <min>0</min>
+            <helpText>Added to the Chowdeck price shown at checkout. Amount in naira, or percent.</helpText>
+            <helpText lang="de-DE">Wird zum Chowdeck-Preis im Checkout addiert. Betrag in Naira oder Prozent.</helpText>
+        </input-field>
+
+        <input-field type="float">
+            <name>fallbackPrice</name>
+            <label>Fallback price when Chowdeck is unavailable</label>
+            <label lang="de-DE">Ersatzpreis, wenn Chowdeck nicht erreichbar ist</label>
+            <defaultValue>0</defaultValue>
+            <min>0</min>
+            <helpText>0 = no fallback: customers choose another delivery method. Above 0: this price is charged and the order shows the real Chowdeck price when you request the rider.</helpText>
+            <helpText lang="de-DE">0 = kein Ersatzpreis: Kunden wählen eine andere Versandart. Über 0: dieser Preis wird berechnet, und die Bestellung zeigt den echten Chowdeck-Preis, wenn Sie den Fahrer anfordern.</helpText>
+        </input-field>
+
+        <input-field type="int">
+            <name>quoteCacheTtl</name>
+            <label>Price cache time (seconds)</label>
+            <label lang="de-DE">Cache-Dauer für Preise (Sekunden)</label>
+            <defaultValue>600</defaultValue>
+            <min>60</min>
+            <helpText>How long a Chowdeck price is reused for an unchanged address.</helpText>
+            <helpText lang="de-DE">Wie lange ein Chowdeck-Preis für eine unveränderte Adresse wiederverwendet wird.</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Logging</title>
+        <title lang="de-DE">Protokollierung</title>
+
+        <input-field type="bool">
+            <name>enableDebugging</name>
+            <label>Enable debug logging</label>
+            <label lang="de-DE">Debug-Protokollierung aktivieren</label>
+            <defaultValue>false</defaultValue>
+            <helpText>
+                Writes debug, info and warning entries to var/log/kmh_chowdeck_*.log.
+                Errors are always logged regardless of this setting. API keys are never logged.
+            </helpText>
+            <helpText lang="de-DE">
+                Schreibt Debug-, Info- und Warnungseinträge nach
+                var/log/kmh_chowdeck_*.log. Fehler werden immer protokolliert.
+                API-Schlüssel werden nie protokolliert.
+            </helpText>
+        </input-field>
+
+        <input-field type="multi-select">
+            <name>logLevels</name>
+            <label>Log levels</label>
+            <label lang="de-DE">Protokollstufen</label>
+            <helpText>
+                Restrict debug logging to specific PSR-3 levels. Leave empty to
+                log every level once debug logging is enabled.
+            </helpText>
+            <options>
+                <option><id>debug</id><name>Debug</name></option>
+                <option><id>info</id><name>Info</name></option>
+                <option><id>notice</id><name>Notice</name></option>
+                <option><id>warning</id><name>Warning</name></option>
+            </options>
+        </input-field>
+    </card>
+</config>

@@ -1,0 +1,23 @@
+parameters:
+    paths:
+        - 'src/'
+
+    # shopware/storefront is a declared dependency (see composer.json); PHPStan
+    # resolves Shopware\Storefront\* through the Composer autoloader. Do NOT add
+    # a scanDirectories path into the host's vendor/ — it breaks in CI and in
+    # shopware-cli, where the extension is analysed in an isolated directory.
+    # Set the level to 9 (the highest level)
+    level: 9
+
+    # The template's ignores are generic; not every plugin trips all of them,
+    # and an unmatched ignore is otherwise a hard error.
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
+
+    parallel:
+        jobSize: 20
+        maximumNumberOfProcesses: 32
+        minimumNumberOfJobsPerProcess: 2

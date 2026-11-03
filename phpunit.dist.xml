@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         executionOrder="depends,defects"
+         beStrictAboutCoverageMetadata="true"
+         beStrictAboutOutputDuringTests="true"
+         stopOnFailure="false">
+
+    <php>
+        <!-- PCOV Configuration -->
+        <ini name="pcov.enabled" value="1"/>
+        <ini name="pcov.directory" value="."/>
+        <ini name="pcov.exclude" value="tests,vendor,Migration,Resources"/>
+
+        <!-- Memory and error settings -->
+        <ini name="memory_limit" value="512M"/>
+        <ini name="error_reporting" value="-1"/>
+        <ini name="display_errors" value="1"/>
+
+        <!-- Symfony specific settings -->
+        <server name="KERNEL_CLASS" value="Shopware\Core\Kernel"/>
+        <env name="APP_ENV" value="test"/>
+        <env name="APP_DEBUG" value="1"/>
+        <!-- Test-only key. Dockware's .env.test ships a 104-bit APP_SECRET, and
+             Shopware refuses to sign admin API tokens with less than 256 bits,
+             so every AdminApiTestBehaviour test fails with "No token returned". -->
+        <env name="APP_SECRET" value="test-only-app-secret-0123456789abcdef0123456789abcdef" force="true"/>
+        <env name="DATABASE_URL" value="mysql://root:root@127.0.0.1:3306/shopware_test"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="Project Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+        <exclude>
+            <directory>src/Migration</directory>
+            <directory>src/Resources</directory>
+            <directory>src/DependencyInjection</directory>
+            <directory>src/Entity</directory>
+            <!-- DAL definitions/entities/collections: declarations exercised
+                 only through the DAL, covered by the kernel integration test. -->
+            <directory>src/Core/Content</directory>
+            <directory>tests</directory>
+            <directory>vendor</directory>
+            <!-- Plugin bootstrap: lifecycle glue (DI container access, install/
+                 update/activate hooks) that can only be exercised with a booted
+                 Shopware kernel. Covered by the @group kernel integration tests
+                 in the full suite; excluded here so the no-kernel CI coverage
+                 gate reflects code it can actually run. -->
+            <file>src/KmhChowdeckRelaySW.php</file>
+        </exclude>
+    </source>
+
+    <coverage>
+        <report>
+            <html outputDirectory="build/coverage" lowUpperBound="50" highLowerBound="80"/>
+            <clover outputFile="build/logs/clover.xml"/>
+            <text outputFile="build/coverage.txt" showUncoveredFiles="true"/>
+        </report>
+    </coverage>
+
+    <logging>
+        <junit outputFile="build/logs/junit.xml"/>
+        <testdoxHtml outputFile="build/logs/testdox.html"/>
+        <testdoxText outputFile="build/logs/testdox.txt"/>
+    </logging>
+</phpunit>

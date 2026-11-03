@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ruleset name="Shopware Plugin Coding Standard">
+    <description>Custom coding standard for Shopware plugins</description>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <exclude-pattern>*/Migration/*</exclude-pattern>
+    <exclude-pattern>*/Resources/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <!-- Include PSR12 standard -->
+    <rule ref="PSR12"/>
+
+    <!-- Shopware-specific adjustments -->
+    <rule ref="PSR1.Classes.ClassDeclaration">
+        <exclude-pattern>*/Migration/*</exclude-pattern>
+    </rule>
+
+    <!-- Allow longer lines for Shopware annotations -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="150"/>
+        </properties>
+    </rule>
+
+    <!-- Allow @var without type for Shopware entities -->
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+        <exclude-pattern>*/Entity/*</exclude-pattern>
+    </rule>
+
+    <!-- Custom rules for tests -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <!-- Allow public methods in tests -->
+    <rule ref="PSR2.Methods.MethodDeclaration">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+</ruleset>

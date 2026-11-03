@@ -1,0 +1,5 @@
+# One entry per module that owns HTTP controllers. Routes themselves are
+# declared with #[Route] attributes on the controller methods.
+kmh_chowdeck_administration:
+    resource: ../../Administration/Controller/
+    type: attribute

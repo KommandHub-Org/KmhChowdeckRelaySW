@@ -1,0 +1,60 @@
+name: Shopware Plugin CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, gd, zip
+          coverage: pcov
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('composer.lock') }}
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ✅ Lint PHP (fast fail)
+      - name: Lint PHP files
+        run: find src -type f -name "*.php" -print0 | xargs -0 -n1 php -l
+
+      # ✅ Static analysis
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyse src --no-progress
+
+      # ✅ Code style
+      - name: Run PHP CS Fixer
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      # ✅ Unit + mockable integration tests with coverage (no Shopware kernel!)
+      # Tests tagged @group kernel need a booted Shopware kernel + database and
+      # are excluded here; run the full suite locally with `make test`.
+      - name: Run PHPUnit
+        run: ./vendor/bin/phpunit --exclude-group kernel --testdox --coverage-clover build/logs/clover.xml
+
+      # ✅ Enforce the line-coverage threshold (the plugin bootstrap class,
+      # which is only reachable with a kernel, is excluded in phpunit.dist.xml)
+      - name: Check coverage threshold
+        run: ./vendor/bin/coverage-check build/logs/clover.xml 100

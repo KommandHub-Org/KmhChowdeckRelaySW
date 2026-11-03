@@ -1,0 +1,12 @@
+# Dedicated log channel so this plugin's output is separable from Shopware's.
+# ConfigurableLogger decorates monolog.logger.kmh_chowdeck_channel (see services.yml)
+# and gates what actually reaches this handler on the plugin's debug settings.
+monolog:
+  channels: ['kmh_chowdeck_channel']
+
+  handlers:
+    chowdeckLogHandler:
+      max_files: 7
+      type: rotating_file
+      path: "%kernel.logs_dir%/kmh_chowdeck_%kernel.environment%.log"
+      channels: ["kmh_chowdeck_channel"]

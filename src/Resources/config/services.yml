@@ -1,0 +1,53 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+    # Give this plugin's services the ConfigurableLogger wherever they type-hint
+    # PSR-3, without touching the container-wide Psr\Log\LoggerInterface alias.
+    #
+    # Aliasing that globally rebinds LoggerInterface for *every* autowired
+    # consumer in the installation, including Shopware core and other plugins.
+    # Two plugins doing it means the last one compiled wins, so sibling plugins
+    # would silently log through each other's logger and each other's debug
+    # toggle. A bind is scoped to the services defined in this file, so it
+    # cannot collide.
+    bind:
+      Psr\Log\LoggerInterface $logger: '@Kommandhub\ChowdeckRelaySW\Logging\ConfigurableLogger'
+
+  Kommandhub\ChowdeckRelaySW\:
+    resource: '../../*'
+    exclude: '../../{DependencyInjection,Entity,Migration,Tests,Kernel.php}'
+
+  # The explicit $logger argument overrides the bind above, so the wrapper
+  # decorates the real monolog channel instead of recursing into itself.
+  Kommandhub\ChowdeckRelaySW\Logging\ConfigurableLogger:
+    arguments:
+      $logger: '@monolog.logger.kmh_chowdeck_channel'
+    tags:
+      - { name: 'monolog.logger', channel: 'kmh_chowdeck_channel' }
+
+  # Symfony does not auto-alias an interface to its single implementation.
+  Kommandhub\ChowdeckRelaySW\Client\Http\HttpClientInterface:
+    alias: Kommandhub\ChowdeckRelaySW\Client\Http\ChowdeckHttpClient
+
+  Kommandhub\ChowdeckRelaySW\Core\Content\Delivery\DeliveryDefinition:
+    tags:
+      - { name: 'shopware.entity.definition', entity: 'kmh_chowdeck_delivery' }
+
+  Kommandhub\ChowdeckRelaySW\Core\Content\Delivery\OrderDeliveryExtension:
+    tags:
+      - { name: 'shopware.entity.extension' }
+
+  Kommandhub\ChowdeckRelaySW\Core\Content\WebhookEvent\WebhookEventDefinition:
+    tags:
+      - { name: 'shopware.entity.definition', entity: 'kmh_chowdeck_webhook_event' }
+
+  Kommandhub\ChowdeckRelaySW\ScheduledTask\WebhookEventCleanupTask:
+    tags:
+      - { name: 'shopware.scheduled.task' }
+
+  Kommandhub\ChowdeckRelaySW\Administration\Controller\ConnectionController:
+    public: true
+    calls:
+      - [setContainer, ['@service_container']]

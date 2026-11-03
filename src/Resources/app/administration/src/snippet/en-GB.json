@@ -1,0 +1,18 @@
+{
+  "kmh-chowdeck": {
+    "title": "Chowdeck Relay Rider Delivery",
+    "config": {
+      "testConnection": "Test connection",
+      "saveFirst": "Save the settings first; the test uses the saved API key.",
+      "connectionOk": "Connected to Chowdeck. Wallet balance: {balance} {currency}",
+      "requestFailed": "The request to the Shopware server failed."
+    }
+  },
+  "sw-privileges": {
+    "permissions": {
+      "kmh_chowdeck_delivery": {
+        "label": "Chowdeck rider deliveries"
+      }
+    }
+  }
+}

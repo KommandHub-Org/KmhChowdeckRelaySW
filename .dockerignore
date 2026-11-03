@@ -1,0 +1,8 @@
+# The image installs tooling only — nothing from this directory is copied into
+# it — so the build context can be empty. Without this, `docker compose build`
+# would ship vendor/, node_modules/ and .git to the Docker daemon on every build
+# for no reason. The Dockerfile itself is read separately and is unaffected.
+#
+# If a COPY of plugin sources is ever added to the Dockerfile, un-ignore exactly
+# what it needs rather than deleting this file.
+*

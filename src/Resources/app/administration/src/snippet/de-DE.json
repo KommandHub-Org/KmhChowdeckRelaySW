@@ -1,0 +1,18 @@
+{
+  "kmh-chowdeck": {
+    "title": "Chowdeck Relay Kurierlieferung",
+    "config": {
+      "testConnection": "Verbindung testen",
+      "saveFirst": "Speichern Sie die Einstellungen zuerst; der Test verwendet den gespeicherten API-Schlüssel.",
+      "connectionOk": "Mit Chowdeck verbunden. Wallet-Guthaben: {balance} {currency}",
+      "requestFailed": "Die Anfrage an den Shopware-Server ist fehlgeschlagen."
+    }
+  },
+  "sw-privileges": {
+    "permissions": {
+      "kmh_chowdeck_delivery": {
+        "label": "Chowdeck-Fahrerlieferungen"
+      }
+    }
+  }
+}
