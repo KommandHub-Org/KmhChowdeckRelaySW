@@ -11,11 +11,10 @@ merchant's own Chowdeck account. Free and open source.
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](.github/workflows/php.yml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-> **Status: in development (0.1.0).** This release contains the foundation:
-> settings, the Chowdeck Relay API client, Test connection, the shipping method
-> and the delivery tables. Checkout prices (CD03) and rider requests, tracking
-> and webhooks (CD04) follow. Do not activate the shipping method in a live
-> shop yet.
+> **Status: in development (0.1.0).** Settings, the Chowdeck Relay API
+> client, Test connection and live checkout prices are in. Rider requests,
+> tracking and webhooks (CD04) follow, so orders cannot be dispatched from the
+> shop yet. Do not activate the shipping method in a live shop yet.
 
 ## Table of contents
 
@@ -119,8 +118,10 @@ No `Application/Domain/Infrastructure` nesting — one obvious home per class.
 | --- | --- |
 | `src/KmhChowdeckRelaySW.php` | plugin bootstrap and lifecycle hooks (installer, uninstall clean-up) |
 | `src/Client/` | the only code that talks HTTP to Chowdeck: transport, resources, DTOs |
-| `src/Shipping/` | shipping method identity and installer |
+| `src/Shipping/` | cart processor, checkout errors, shipping method installer |
 | `src/Geocoding/` | optional Google address → coordinates lookup, cached |
+| `src/Quote/` | checkout fee: pickup and customer address, cache, markup, failure notices |
+| `src/Delivery/` | delivery status, writes the fee onto the order when it is placed |
 | `src/Webhook/` | webhook signature check (endpoint follows in CD04) |
 | `src/Administration/Controller/` | Admin API route behind Test connection |
 | `src/Core/Content/` | DAL entities `kmh_chowdeck_delivery`, `kmh_chowdeck_webhook_event` |
@@ -166,6 +167,37 @@ Every failure becomes a `ChowdeckApiException` with an `ApiErrorReason`
 timeout, network, invalid response). Messages never contain the API key. Add a
 new call by adding a method to the matching `Resource/` class — never by
 issuing HTTP from a service.
+
+### Checkout
+
+When the customer selects "Same-day rider delivery (Chowdeck)", the cart
+processor `Shipping/ChowdeckDeliveryProcessor` (priority -6000, after the core
+delivery processor) prices the delivery through `Quote/QuoteService`:
+
+1. The customer's street, city and **phone** are required (the rider calls).
+2. The pickup address and the customer address go to Chowdeck as text, with
+   coordinates added when known (your pickup coordinates, or Google address
+   lookup when it is on).
+3. The fee is cached for the price cache time, keyed by pickup, address and
+   declared value; the shipping cost is the Chowdeck total plus your markup.
+4. On order placement the fee id, Chowdeck price and charged price are written
+   to `kmh_chowdeck_delivery` (status `quoted`, or `needs_quote` when the
+   fallback price was charged).
+
+When Chowdeck cannot price the address, checkout explains why and the customer
+picks another method; the order is never placed with a wrong price:
+
+| Situation | Customer sees |
+| --- | --- |
+| No phone or incomplete address | "complete your delivery address, including a phone number" |
+| Address Chowdeck cannot find or does not serve | "Chowdeck does not deliver to this address" |
+| Shop currency is not NGN | "only available in naira" |
+| Chowdeck unreachable | your **fallback price** if set, else "temporarily unavailable" |
+| Key missing, pickup missing or account without Relay | "currently unavailable"; you get an admin notification (at most once an hour) |
+
+Do not make Chowdeck the only or the default shipping method of a sales
+channel. The Chowdeck **sandbox cannot read text addresses** — switch on
+address lookup with a Google Maps key to get sandbox prices.
 
 ### Data model
 

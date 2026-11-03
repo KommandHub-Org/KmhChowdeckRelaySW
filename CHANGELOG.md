@@ -6,6 +6,7 @@ Foundation release, not for live shops yet.
 - Test connection shows your Chowdeck Relay wallet balance or Chowdeck's error. A test key (sk_test_…) uses the Chowdeck sandbox.
 - Optional address lookup with Google Maps: addresses are turned into coordinates for more exact prices (needed in the Chowdeck sandbox); off or without a key, addresses are sent as text.
 - Shipping method "Same-day rider delivery (Chowdeck)" created inactive; never deleted, only switched off on deactivation.
+- Live Chowdeck price at checkout (plus your optional markup), cached per address. If an address cannot be priced, checkout explains why and the customer picks another method; if Chowdeck is unreachable, an optional fallback price applies and you get an admin notification.
 
 <!--
 Format notes (this file is rendered by the Shopware Store):

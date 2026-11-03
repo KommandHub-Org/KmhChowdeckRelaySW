@@ -52,3 +52,8 @@ services:
     public: true
     calls:
       - [setContainer, ['@service_container']]
+
+  # After the core DeliveryProcessor (-5000), which builds the deliveries.
+  Kommandhub\ChowdeckRelaySW\Shipping\ChowdeckDeliveryProcessor:
+    tags:
+      - { name: 'shopware.cart.processor', priority: -6000 }

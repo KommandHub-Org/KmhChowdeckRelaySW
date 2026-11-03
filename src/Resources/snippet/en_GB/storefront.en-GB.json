@@ -1,5 +1,12 @@
 {
   "kmh-chowdeck": {
     "title": "Chowdeck Relay Rider Delivery"
+  },
+  "checkout": {
+    "kmh-chowdeck-incomplete_address": "Please complete your delivery address, including a phone number, to use same-day rider delivery.",
+    "kmh-chowdeck-invalid_address": "Chowdeck does not deliver to this address. Please check it or choose another delivery method.",
+    "kmh-chowdeck-unavailable": "Same-day rider delivery is temporarily unavailable. Please choose another delivery method.",
+    "kmh-chowdeck-currency_mismatch": "Same-day rider delivery is only available in naira. Please choose another delivery method.",
+    "kmh-chowdeck-not_configured": "Same-day rider delivery is currently unavailable. Please choose another delivery method."
   }
 }

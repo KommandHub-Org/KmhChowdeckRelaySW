@@ -1,5 +1,12 @@
 {
   "kmh-chowdeck": {
-    "title": "Chowdeck Relay Rider Delivery"
+    "title": "Chowdeck Relay Kurierlieferung"
+  },
+  "checkout": {
+    "kmh-chowdeck-incomplete_address": "Bitte vervollständigen Sie Ihre Lieferadresse einschließlich Telefonnummer, um die Kurierlieferung am selben Tag zu nutzen.",
+    "kmh-chowdeck-invalid_address": "Chowdeck liefert nicht an diese Adresse. Bitte prüfen Sie sie oder wählen Sie eine andere Versandart.",
+    "kmh-chowdeck-unavailable": "Die Kurierlieferung am selben Tag ist vorübergehend nicht verfügbar. Bitte wählen Sie eine andere Versandart.",
+    "kmh-chowdeck-currency_mismatch": "Die Kurierlieferung am selben Tag ist nur in Naira verfügbar. Bitte wählen Sie eine andere Versandart.",
+    "kmh-chowdeck-not_configured": "Die Kurierlieferung am selben Tag ist derzeit nicht verfügbar. Bitte wählen Sie eine andere Versandart."
   }
 }

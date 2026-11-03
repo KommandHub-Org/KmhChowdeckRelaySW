@@ -6,3 +6,4 @@ Basis-Release, noch nicht für Live-Shops.
 - „Verbindung testen“ zeigt das Guthaben Ihres Chowdeck-Relay-Wallets oder die Fehlermeldung von Chowdeck. Ein Testschlüssel (sk_test_…) nutzt die Chowdeck-Sandbox.
 - Optionale Adresssuche mit Google Maps: Adressen werden für genauere Preise in Koordinaten umgewandelt (in der Chowdeck-Sandbox nötig); aus oder ohne Schlüssel gehen Adressen als Text an Chowdeck.
 - Versandart „Kurierlieferung am selben Tag (Chowdeck)“ wird inaktiv angelegt; sie wird nie gelöscht, beim Deaktivieren nur ausgeschaltet.
+- Live-Preis von Chowdeck im Checkout (plus optionalem Aufschlag), pro Adresse zwischengespeichert. Kann eine Adresse nicht bepreist werden, erklärt der Checkout den Grund und der Kunde wählt eine andere Versandart; ist Chowdeck nicht erreichbar, gilt ein optionaler Ersatzpreis und Sie erhalten eine Admin-Benachrichtigung.
