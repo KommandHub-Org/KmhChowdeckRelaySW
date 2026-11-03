@@ -3,7 +3,8 @@
 Foundation release, not for live shops yet.
 
 - Settings per sales channel: Chowdeck API key and webhook secret, pickup address and contact, item type, delivery PIN, customer notifications, declared order value, markup, fallback price, price cache time.
-- Test connection shows your Chowdeck Relay wallet balance or Chowdeck's error.
+- Test connection shows your Chowdeck Relay wallet balance or Chowdeck's error. A test key (sk_test_…) uses the Chowdeck sandbox.
+- Optional address lookup with Google Maps: addresses are turned into coordinates for more exact prices (needed in the Chowdeck sandbox); off or without a key, addresses are sent as text.
 - Shipping method "Same-day rider delivery (Chowdeck)" created inactive; never deleted, only switched off on deactivation.
 
 <!--

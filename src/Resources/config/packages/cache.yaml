@@ -1,0 +1,9 @@
+# Geocoding results cost the merchant money per Google call, so they must
+# survive between requests. A dedicated filesystem pool keeps them even where
+# cache.app is an in-memory array (as in some dev setups).
+framework:
+  cache:
+    pools:
+      kmh_chowdeck.cache:
+        adapter: cache.adapter.filesystem
+        default_lifetime: 86400

@@ -43,8 +43,8 @@
             <name>pickupLatitude</name>
             <label>Pickup latitude (optional)</label>
             <label lang="de-DE">Breitengrad der Abholung (optional)</label>
-            <helpText>With the longitude, makes the delivery price more exact. Leave empty to use the address only.</helpText>
-            <helpText lang="de-DE">Zusammen mit dem Längengrad wird der Lieferpreis genauer. Leer lassen, um nur die Adresse zu verwenden.</helpText>
+            <helpText>With the longitude, makes the delivery price more exact. Leave empty to use the address (looked up with Google Maps when address lookup is on).</helpText>
+            <helpText lang="de-DE">Zusammen mit dem Längengrad wird der Lieferpreis genauer. Leer lassen, um die Adresse zu verwenden (mit Google Maps ermittelt, wenn die Adresssuche aktiv ist).</helpText>
         </input-field>
 
         <input-field type="float">
@@ -71,6 +71,28 @@
             <name>pickupContactEmail</name>
             <label>Contact email (optional)</label>
             <label lang="de-DE">Kontakt-E-Mail (optional)</label>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Address lookup (geocoding)</title>
+        <title lang="de-DE">Adresssuche (Geocoding)</title>
+
+        <input-field type="bool">
+            <name>geocodingEnabled</name>
+            <label>Look up coordinates with Google Maps</label>
+            <label lang="de-DE">Koordinaten mit Google Maps ermitteln</label>
+            <defaultValue>false</defaultValue>
+            <helpText>Turns the pickup and customer addresses into coordinates before asking Chowdeck for a price, which makes prices more exact and is needed in the Chowdeck sandbox. Off, or without a key: addresses are sent to Chowdeck as text.</helpText>
+            <helpText lang="de-DE">Wandelt Abhol- und Kundenadresse in Koordinaten um, bevor Chowdeck nach einem Preis gefragt wird. Das macht Preise genauer und ist in der Chowdeck-Sandbox nötig. Aus oder ohne Schlüssel: Adressen gehen als Text an Chowdeck.</helpText>
+        </input-field>
+
+        <input-field type="password">
+            <name>googleMapsApiKey</name>
+            <label>Google Maps API key</label>
+            <label lang="de-DE">Google-Maps-API-Schlüssel</label>
+            <helpText>A key with the Geocoding API enabled. Google bills each lookup to your account; the plugin caches results for 30 days.</helpText>
+            <helpText lang="de-DE">Ein Schlüssel mit aktivierter Geocoding API. Google berechnet jede Abfrage Ihrem Konto; das Plugin speichert Ergebnisse 30 Tage.</helpText>
         </input-field>
     </card>
 

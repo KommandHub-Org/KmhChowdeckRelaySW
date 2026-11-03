@@ -90,9 +90,16 @@ of the configuration page to override a value for one channel only.
    Credentials. A live key calls real riders.
 2. **Pickup:** the address the rider collects from, as one line, and the
    contact the rider asks for. Optional coordinates make prices more exact.
-3. **Delivery:** item type, delivery PIN, how Chowdeck notifies the customer,
+3. **Address lookup (optional):** switch on "Look up coordinates with Google
+   Maps" and enter a Google Maps key with the Geocoding API. Pickup and
+   customer addresses are then turned into coordinates before Chowdeck is
+   asked for a price — more exact prices, and required for the Chowdeck
+   sandbox, which cannot read text addresses. Results are cached for 30 days;
+   Google bills each lookup to your account. Off, or without a key, addresses
+   go to Chowdeck as text.
+4. **Delivery:** item type, delivery PIN, how Chowdeck notifies the customer,
    and whether to declare the order value (Chowdeck's loss and damage cover).
-4. **Checkout price:** optional markup, an optional fallback price used when
+5. **Checkout price:** optional markup, an optional fallback price used when
    Chowdeck cannot be reached, and how long a price is reused.
 
 The plugin creates the shipping method "Same-day rider delivery (Chowdeck)"
@@ -113,6 +120,7 @@ No `Application/Domain/Infrastructure` nesting — one obvious home per class.
 | `src/KmhChowdeckRelaySW.php` | plugin bootstrap and lifecycle hooks (installer, uninstall clean-up) |
 | `src/Client/` | the only code that talks HTTP to Chowdeck: transport, resources, DTOs |
 | `src/Shipping/` | shipping method identity and installer |
+| `src/Geocoding/` | optional Google address → coordinates lookup, cached |
 | `src/Webhook/` | webhook signature check (endpoint follows in CD04) |
 | `src/Administration/Controller/` | Admin API route behind Test connection |
 | `src/Core/Content/` | DAL entities `kmh_chowdeck_delivery`, `kmh_chowdeck_webhook_event` |

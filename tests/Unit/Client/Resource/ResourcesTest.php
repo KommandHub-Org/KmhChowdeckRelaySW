@@ -13,6 +13,7 @@ use Kommandhub\ChowdeckRelaySW\Client\Dto\CreateDeliveryRequest;
 use Kommandhub\ChowdeckRelaySW\Client\Dto\Delivery;
 use Kommandhub\ChowdeckRelaySW\Client\Dto\DeliveryFee;
 use Kommandhub\ChowdeckRelaySW\Client\Dto\FeeRequest;
+use Kommandhub\ChowdeckRelaySW\Client\Dto\GeoPoint;
 use Kommandhub\ChowdeckRelaySW\Client\Dto\WalletBalance;
 use Kommandhub\ChowdeckRelaySW\Client\Http\ChowdeckHttpClient;
 use Kommandhub\ChowdeckRelaySW\Client\Resource\ApiResource;
@@ -32,6 +33,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 #[CoversClass(Deliveries::class)]
 #[CoversClass(ChowdeckClient::class)]
 #[CoversClass(FeeRequest::class)]
+#[CoversClass(GeoPoint::class)]
 #[CoversClass(CreateDeliveryRequest::class)]
 #[CoversClass(Contact::class)]
 #[CoversClass(DeliveryFee::class)]
@@ -65,26 +67,30 @@ class ResourcesTest extends TestCase
         static::assertSame(50.0, $fee->safetyFee);
     }
 
-    public function testFeeAddsPickupCoordinatesAndDeclaredValueInKobo(): void
+    public function testFeeAddsCoordinatesNextToTheTextAndDeclaredValueInKobo(): void
     {
         $response = ClientFactory::ok([]);
 
-        $fee = ClientFactory::client($response)->deliveries()->fee(new FeeRequest('a', 'b', 6.43, 3.42, 15000.5));
+        $fee = ClientFactory::client($response)->deliveries()->fee(new FeeRequest('a', 'b', new GeoPoint(6.43, 3.42), new GeoPoint(6.5, 3.37), 15000.5));
 
-        static::assertSame(
-            ['source_address_string' => 'a', 'destination_address_string' => 'b', 'source_address' => ['latitude' => 6.43, 'longitude' => 3.42], 'estimated_order_amount' => 1500050],
-            $this->body($response),
-        );
+        static::assertSame([
+            'source_address_string' => 'a',
+            'destination_address_string' => 'b',
+            'source_address' => ['latitude' => 6.43, 'longitude' => 3.42],
+            'destination_address' => ['latitude' => 6.5, 'longitude' => 3.37],
+            'estimated_order_amount' => 1500050,
+        ], $this->body($response));
         static::assertSame(0, $fee->id);
     }
 
-    public function testFeeWithOnlyOneCoordinateSendsNone(): void
+    public function testFeeWithOnlyDestinationCoordinates(): void
     {
         $response = ClientFactory::ok(['id' => 1]);
 
-        ClientFactory::client($response)->deliveries()->fee(new FeeRequest('a', 'b', 6.43));
+        ClientFactory::client($response)->deliveries()->fee(new FeeRequest('a', 'b', null, new GeoPoint(6.5, 3.37)));
 
         static::assertArrayNotHasKey('source_address', $this->body($response));
+        static::assertArrayHasKey('destination_address', $this->body($response));
     }
 
     public function testCreateSendsTheFullBody(): void
