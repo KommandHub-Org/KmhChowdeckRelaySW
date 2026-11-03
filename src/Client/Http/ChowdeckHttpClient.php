@@ -13,7 +13,9 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
  * Transport for the Chowdeck REST API.
  *
  * The only class in the plugin that knows the base URL and how the API key is
- * presented. Chowdeck has one key and no sandbox (spec §13.2).
+ * presented. The key decides the environment: a test key (`sk_test_…`) only
+ * works against Chowdeck's sandbox host, so no separate mode setting is needed
+ * (spec §13.2).
  *
  * Credentials are resolved per request rather than per instance: they are
  * sales-channel scoped settings, and this service is shared across sales
@@ -28,7 +30,15 @@ class ChowdeckHttpClient implements HttpClientInterface
      * The OpenAPI host. The Relay guides show api.relay.chowdeck.com, which
      * does not resolve (checked 3 Nov 2026, spec §13.2).
      */
-    private const BASE_URL = 'https://api.chowdeck.com';
+    private const BASE_URL_LIVE = 'https://api.chowdeck.com';
+
+    /**
+     * Sandbox behind console.chowdeck.com; the live host answers a test key
+     * with "Vendor not found" (checked 3 Nov 2026).
+     */
+    private const BASE_URL_SANDBOX = 'https://console-api.chowdeck.com';
+
+    private const TEST_KEY_PREFIX = 'sk_test_';
 
     /**
      * Checkout waits on these calls, so they must give up quickly (spec §13.2).
@@ -73,6 +83,8 @@ class ChowdeckHttpClient implements HttpClientInterface
         $options['timeout'] = self::TIMEOUT;
         $options['max_duration'] = self::MAX_DURATION;
 
-        return $this->client->request($method, self::BASE_URL . $endpoint, $options);
+        $baseUrl = str_starts_with($apiKey, self::TEST_KEY_PREFIX) ? self::BASE_URL_SANDBOX : self::BASE_URL_LIVE;
+
+        return $this->client->request($method, $baseUrl . $endpoint, $options);
     }
 }

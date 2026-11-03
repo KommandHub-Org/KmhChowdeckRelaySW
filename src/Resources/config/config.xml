@@ -10,16 +10,16 @@
             <name>apiKey</name>
             <label>API key</label>
             <label lang="de-DE">API-Schlüssel</label>
-            <helpText>Found in your Chowdeck dashboard under Settings > Developer. Rider deliveries are paid from your Chowdeck Relay wallet.</helpText>
-            <helpText lang="de-DE">Zu finden im Chowdeck-Dashboard unter Settings > Developer. Fahrerlieferungen werden aus Ihrem Chowdeck-Relay-Wallet bezahlt.</helpText>
+            <helpText>The integration key from your Chowdeck dashboard (Settings > Developer settings). A test key (sk_test_…) uses the Chowdeck sandbox, where no real rider comes; a live key calls real riders, paid from your Chowdeck wallet.</helpText>
+            <helpText lang="de-DE">Der Integration Key aus Ihrem Chowdeck-Dashboard (Settings > Developer settings). Ein Testschlüssel (sk_test_…) nutzt die Chowdeck-Sandbox, in der kein echter Fahrer kommt; ein Live-Schlüssel ruft echte Fahrer, bezahlt aus Ihrem Chowdeck-Wallet.</helpText>
         </input-field>
 
         <input-field type="password">
             <name>webhookSecret</name>
             <label>Webhook secret</label>
             <label lang="de-DE">Webhook-Secret</label>
-            <helpText>From the same page in the Chowdeck dashboard. Used to check that status updates really come from Chowdeck.</helpText>
-            <helpText lang="de-DE">Von derselben Seite im Chowdeck-Dashboard. Damit wird geprüft, dass Statusmeldungen wirklich von Chowdeck kommen.</helpText>
+            <helpText>The signing secret Chowdeck uses for webhooks. For a test key it is shown in the Chowdeck sandbox console (console.chowdeck.com) under Setup &amp; Credentials. Used to check that status updates really come from Chowdeck.</helpText>
+            <helpText lang="de-DE">Das Signing Secret, mit dem Chowdeck Webhooks signiert. Für einen Testschlüssel steht es in der Chowdeck-Sandbox-Konsole (console.chowdeck.com) unter Setup &amp; Credentials. Damit wird geprüft, dass Statusmeldungen wirklich von Chowdeck kommen.</helpText>
         </input-field>
 
         <component name="kmh-chowdeck-connection-test">

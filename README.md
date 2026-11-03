@@ -81,10 +81,13 @@ bin/console cache:clear
 Every setting is sales-channel scoped: use the sales-channel selector at the top
 of the configuration page to override a value for one channel only.
 
-1. **Chowdeck account:** enter the API key and the webhook secret from the
-   Chowdeck dashboard (Settings > Developer), **save**, then click
-   **Test connection**. It shows your Relay wallet balance, or Chowdeck's error.
-   Chowdeck has no test mode: every rider you request is a real delivery.
+1. **Chowdeck account:** enter the integration key from the Chowdeck dashboard
+   (Settings > Developer settings) and the webhook signing secret, **save**,
+   then click **Test connection**. It shows your Relay wallet balance, or
+   Chowdeck's error. A test key (`sk_test_…`) talks to the Chowdeck sandbox —
+   no real riders; its signing secret is in the sandbox console
+   ([console.chowdeck.com](https://console.chowdeck.com)) under Setup &
+   Credentials. A live key calls real riders.
 2. **Pickup:** the address the rider collects from, as one line, and the
    contact the rider asks for. Optional coordinates make prices more exact.
 3. **Delivery:** item type, delivery PIN, how Chowdeck notifies the customer,
@@ -144,7 +147,7 @@ the route.
 
 | Layer | Responsibility |
 | --- | --- |
-| `Http/ChowdeckHttpClient` | base URL `https://api.chowdeck.com`, bearer API key, 3 s timeout |
+| `Http/ChowdeckHttpClient` | bearer API key, 3 s timeout; live keys go to `https://api.chowdeck.com`, test keys (`sk_test_…`) to the sandbox `https://console-api.chowdeck.com` |
 | `Resource/Deliveries` | fee quote, create (calls a rider), get, cancel |
 | `Resource/Wallet` | wallet balance (Test connection) |
 | `Dto/*` | typed requests and results; Chowdeck's kobo amounts are converted to naira |

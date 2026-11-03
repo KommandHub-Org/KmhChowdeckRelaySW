@@ -46,6 +46,15 @@ class ChowdeckHttpClientTest extends TestCase
         static::assertSame('{"fee_id":1}', $response->getRequestOptions()['body']);
     }
 
+    public function testTestKeyGoesToTheSandboxHost(): void
+    {
+        $response = new MockResponse('{}');
+
+        ClientFactory::http($response, 'sk_test_abc')->get('/relay/wallet/balance');
+
+        static::assertSame('https://console-api.chowdeck.com/relay/wallet/balance', $response->getRequestUrl());
+    }
+
     public function testMissingKeyFailsBeforeAnyRequest(): void
     {
         $client = new MockHttpClient(static fn () => throw new \LogicException('must not be called'));
