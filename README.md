@@ -11,14 +11,13 @@ merchant's own Chowdeck account. Free and open source.
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](.github/workflows/php.yml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-> **Status: in development (0.1.0).** Settings, the Chowdeck Relay API
-> client, Test connection and live checkout prices are in. Rider requests,
-> tracking and webhooks (CD04) follow, so orders cannot be dispatched from the
-> shop yet. Do not activate the shipping method in a live shop yet.
+> **Status: pre-release (0.1.0).** Everything below is built and tested. A
+> real rider request has not yet been made end to end, because Chowdeck's
+> sandbox currently refuses to create deliveries; v1.0.0 follows once it has.
 
 ## Table of contents
 
-- [What it will do](#what-it-will-do)
+- [What it does](#what-it-does)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -35,21 +34,24 @@ merchant's own Chowdeck account. Free and open source.
 - [Contributing](#contributing)
 - [License](#license)
 
-## What it will do
+## What it does
 
 - **Checkout:** "Same-day rider delivery (Chowdeck)" shows a live Chowdeck
   price for the customer's address (plus your optional markup). The price
   always comes from the plugin's own Chowdeck quote, never from the browser.
-- **Orders:** you press **Request rider** on the order when the parcel is
-  packed. A rider is never called automatically, because Chowdeck sends one
-  the moment a delivery is created.
-- **Tracking and status:** Chowdeck's tracking link and delivery PIN reach the
-  customer by email; Chowdeck webhooks keep the order's delivery status up to
-  date.
-- **No manual setup:** the mail flows it needs are installed with the plugin.
+- **Orders:** a Chowdeck card on the order requests the rider, shows the rider,
+  delivery PIN and tracking link, refreshes the status and cancels. You press
+  **Request rider** when the parcel is packed; a rider is never called
+  automatically, because Chowdeck sends one the moment a delivery is created.
+- **Tracking:** the Chowdeck tracking link becomes the order's tracking code,
+  shown in the customer account and mails.
+- **Status updates:** Chowdeck webhooks move the order's delivery status
+  (shipped when picked up, cancelled) and trigger mails — no polling.
+- **No manual setup:** the flows it needs are installed with the plugin.
 
 You pay riders from your own Chowdeck Relay wallet; the plugin never collects
-or relays delivery fees.
+or relays delivery fees. Customers stay your customers: they order in your
+shop, not in the Chowdeck app.
 
 ## Requirements
 
@@ -58,8 +60,8 @@ or relays delivery fees.
 | Shopware | `~6.7.0` |
 | PHP | 8.2 or newer |
 | Database | MySQL 8.0+ / MariaDB 10.11+ |
-| Chowdeck | a merchant account with an API key ([dashboard.chowdeck.com](https://dashboard.chowdeck.com)) and a funded Relay wallet |
-| Shop | NGN currency, customer phone number in addresses |
+| Chowdeck | a merchant account with Relay enabled and an API key ([dashboard.chowdeck.com](https://dashboard.chowdeck.com)), and money in the Relay wallet |
+| Shop | NGN currency, customer phone number in addresses, a message queue worker — see [Requirements on your shop](#requirements-on-your-shop) |
 
 ## Installation
 
@@ -73,6 +75,10 @@ bin/console plugin:install --activate KmhChowdeckRelaySW
 bin/console cache:clear
 ```
 
+From v1.0.0 the plugin is also available from the Shopware Store and as a zip
+on the GitHub releases page. Then follow [Configuration](#configuration) and
+activate the shipping method.
+
 ## Configuration
 
 **Settings > Extensions > Chowdeck Relay Rider Delivery**
@@ -81,31 +87,111 @@ Every setting is sales-channel scoped: use the sales-channel selector at the top
 of the configuration page to override a value for one channel only.
 
 1. **Chowdeck account:** enter the integration key from the Chowdeck dashboard
-   (Settings > Developer settings) and the webhook signing secret, **save**,
-   then click **Test connection**. It shows your Relay wallet balance, or
-   Chowdeck's error. A test key (`sk_test_…`) talks to the Chowdeck sandbox —
-   no real riders; its signing secret is in the sandbox console
+   (Settings > Developer settings; the "Merchant ref" shown there is not
+   needed) and the webhook signing secret, **save**, then click
+   **Test connection**. It shows your Relay wallet balance, or Chowdeck's
+   error. A test key (`sk_test_…`) talks to the Chowdeck sandbox — no real
+   riders; its signing secret is in the sandbox console
    ([console.chowdeck.com](https://console.chowdeck.com)) under Setup &
    Credentials. A live key calls real riders.
-2. **Pickup:** the address the rider collects from, as one line, and the
+2. **Webhook URL:** copy the URL shown under the keys into Chowdeck —
+   dashboard Settings > Developer settings for a live key, the sandbox
+   console's test webhook URLs for a test key. Rider status updates then reach
+   the shop by themselves. Updates without a valid signature are refused, so
+   the signing secret must be set; if your live dashboard shows none, ask
+   Chowdeck support for it. The page also shows when the last update arrived.
+3. **Pickup:** the address the rider collects from, as one line, and the
    contact the rider asks for. Optional coordinates make prices more exact.
-3. **Address lookup (optional):** switch on "Look up coordinates with Google
+4. **Address lookup (optional):** switch on "Look up coordinates with Google
    Maps" and enter a Google Maps key with the Geocoding API. Pickup and
    customer addresses are then turned into coordinates before Chowdeck is
    asked for a price — more exact prices, and required for the Chowdeck
    sandbox, which cannot read text addresses. Results are cached for 30 days;
    Google bills each lookup to your account. Off, or without a key, addresses
    go to Chowdeck as text.
-4. **Delivery:** item type, delivery PIN, how Chowdeck notifies the customer,
-   and whether to declare the order value (Chowdeck's loss and damage cover).
-5. **Checkout price:** optional markup, an optional fallback price used when
+5. **Delivery:** item type, delivery PIN (the customer gives it to the rider),
+   how Chowdeck notifies the customer (SMS, email, WhatsApp), and whether to
+   declare the order value (Chowdeck's loss and damage cover, 2% of the value).
+6. **Checkout price:** optional markup, an optional fallback price used when
    Chowdeck cannot be reached, and how long a price is reused.
+7. **Activate the shipping method** "Same-day rider delivery (Chowdeck)" under
+   Settings > Shipping. The plugin creates it **inactive** and never changes it
+   again (except adding the tracking link when the field is empty), so
+   renaming it or changing its sales channels is safe.
 
-The plugin creates the shipping method "Same-day rider delivery (Chowdeck)"
-**inactive** and never changes it again, so renaming it or changing its sales
-channels is safe. Deactivating or uninstalling switches it off; it is never
+Nothing has to be set up in Flow Builder: the plugin installs its flows (see
+[Flows](#flows-installed-with-the-plugin)).
+
+### Requirements on your shop
+
+- **Currency NGN** in the sales channel: Chowdeck prices in naira. In another
+  currency the method shows "only available in naira".
+- **Customer phone number** in the shipping address: the rider calls the
+  customer. Turn on the phone field (Settings > Login & sign-up); without a
+  phone the method asks the customer to complete the address.
+- **Within Chowdeck's service area:** Chowdeck only serves the cities shown in
+  your Chowdeck dashboard. Outside them, the method says Chowdeck does not
+  deliver to the address.
+- **A message queue worker** (`bin/console messenger:consume`, as Shopware
+  recommends for production): webhooks are processed in the background.
+
+### Dispatching an order
+
+1. Pack the parcel.
+2. Open the order; on the **Chowdeck** card press **Request rider**. The
+   plugin asks Chowdeck for a fresh price first. If it equals the checkout
+   price, the rider is requested at once; if it changed, you confirm the new
+   price (the customer's shipping price never changes; the difference is
+   yours).
+3. Chowdeck sends a rider immediately and charges your Relay wallet. The
+   customer gets the tracking link and delivery PIN by email.
+4. Webhooks update the card: finding a rider, on the way to pickup, on the way
+   to the customer (the order delivery becomes **shipped**), delivered.
+5. **Cancel delivery** works until the rider has collected the parcel;
+   Chowdeck refunds the fee to your wallet.
+
+If the request fails (for example an empty wallet), the card shows
+Chowdeck's reason and you get the "rider request failed" email. The Flow
+Builder action "Request Chowdeck rider" exists for shops that want to dispatch
+from their own flow — choose a trigger that fires when the parcel is packed.
+
+### When Chowdeck cannot price a delivery
+
+Checkout never breaks: the method shows a reason and the customer picks
+another method; the order is never placed with a wrong price.
+
+| Situation | Customer sees |
+| --- | --- |
+| No phone or incomplete address | "complete your delivery address, including a phone number" |
+| Address Chowdeck cannot find or does not serve | "Chowdeck does not deliver to this address" |
+| Shop currency is not NGN | "only available in naira" |
+| Chowdeck unreachable | your **fallback price** if set (you confirm the real price when you request the rider), else "temporarily unavailable"; checkout then skips Chowdeck for a minute |
+| Key missing, pickup missing or account without Relay | "currently unavailable"; you get an admin notification (at most once an hour) |
+
+Do not make Chowdeck the only or the default shipping method of a sales
+channel: when Chowdeck cannot price an address, customers need another option.
+
+### Flows installed with the plugin
+
+All active from the start; edit, switch off or delete them in Flow Builder —
+updates never bring them back.
+
+| Flow | When | Does |
+| --- | --- | --- |
+| Chowdeck: rider on the way email | rider requested | emails the customer the tracking link and delivery PIN |
+| Chowdeck: rider request failed alert | rider request fails | emails you Chowdeck's reason |
+| Chowdeck: delivered email | Chowdeck reports delivered | confirms the delivery to the customer |
+
+Further triggers (rider assigned, picked up, cancelled) are available for your
+own flows, e.g. SMS or WhatsApp messages.
+
+### Uninstalling
+
+Deactivating or uninstalling switches the shipping method off; it is never
 deleted, because orders refer to it. Uninstalling **without** "keep user data"
-also removes the delivery and webhook tables.
+also removes the delivery and webhook tables, the plugin's flows (and any flow
+using its triggers or action) and their mail templates. With "keep user data"
+everything stays.
 
 ## Architecture
 
@@ -121,9 +207,10 @@ No `Application/Domain/Infrastructure` nesting — one obvious home per class.
 | `src/Shipping/` | cart processor, checkout errors, shipping method installer |
 | `src/Geocoding/` | optional Google address → coordinates lookup, cached |
 | `src/Quote/` | checkout fee: pickup and customer address, cache, markup, failure notices |
-| `src/Delivery/` | delivery status, writes the fee onto the order when it is placed |
-| `src/Webhook/` | webhook signature check (endpoint follows in CD04) |
-| `src/Administration/Controller/` | Admin API route behind Test connection |
+| `src/Delivery/` | delivery status, request / refresh / cancel rider, order delivery state updates |
+| `src/Webhook/` | webhook endpoint, signature check, de-duplication, async handler |
+| `src/Flow/` | Flow Builder triggers, the Request rider action, flow installer |
+| `src/Administration/Controller/` | Admin API: Test connection, webhook status, rider actions |
 | `src/Core/Content/` | DAL entities `kmh_chowdeck_delivery`, `kmh_chowdeck_webhook_event` |
 | `src/Setting/Service/Config.php` | typed, sales-channel-aware settings reader |
 | `src/Logging/ConfigurableLogger.php` | PSR-3 wrapper gated on the debug settings |
@@ -144,6 +231,9 @@ off in `.shopware-extension.yml`).
 - `main.js` — entry point: registers locales, ACL, components and services.
 - `acl/index.js` — order permissions `kmh_chowdeck_delivery.viewer` / `.editor`.
 - `component/kmh-chowdeck-connection-test.js` — the Test connection button.
+- `component/kmh-chowdeck-webhook-info.js` — webhook URL and last update.
+- `component/kmh-chowdeck-order-delivery.js` — the Chowdeck card on the order.
+- `extension/` — order detail and Flow Builder extensions.
 - `service/chowdeck-config.service.js` — client for the plugin's Admin API.
 - `snippet/*.json` — en-GB, de-DE, fr-FR, mirroring the same key tree.
 
@@ -208,6 +298,17 @@ address lookup with a Google Maps key to get sandbox prices.
 
 `order_delivery.kmhChowdeckDelivery` exposes the delivery on the order delivery
 (loaded only when associated).
+
+### Webhooks
+
+`POST /kmh-chowdeck/webhook/{salesChannelId}` (storefront scope, no login).
+The raw body is checked against `x-chowdeck-signature` (HMAC-SHA256 hex with
+the sales channel's webhook secret); anything unsigned or wrong gets 401. A
+valid body is stored once per body hash in `kmh_chowdeck_webhook_event`
+(`INSERT IGNORE`, so redeliveries are processed once), answered with 200 and
+handled on the message queue: the delivery's status, rider and tracking link
+are updated, picked up ships the order delivery, cancelled cancels it, and
+the matching Flow Builder trigger fires.
 
 ### Scheduled tasks
 
