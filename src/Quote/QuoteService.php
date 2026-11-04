@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kommandhub\ChowdeckRelaySW\Quote;
 
+use Kommandhub\ChowdeckRelaySW\Client\ApiErrorReason;
 use Kommandhub\ChowdeckRelaySW\Client\ChowdeckClient;
 use Kommandhub\ChowdeckRelaySW\Client\Dto\DeliveryFee;
 use Kommandhub\ChowdeckRelaySW\Client\Dto\FeeRequest;
@@ -26,10 +27,15 @@ use Symfony\Contracts\Cache\ItemInterface;
  *
  * Fees are cached per pickup, customer address and declared value, so
  * reloading checkout never calls Chowdeck (or Google) again, while changing
- * the address re-quotes. Failures are never cached.
+ * the address re-quotes. Failures are never cached, with one exception: when
+ * Chowdeck times out or cannot be reached, it is not called again for a
+ * minute, so an outage costs checkout one timeout per minute rather than one
+ * per page.
  */
 class QuoteService
 {
+    private const UNREACHABLE_TTL = 60;
+
     public function __construct(
         private readonly Config $config,
         private readonly ChowdeckClient $client,
@@ -159,12 +165,44 @@ class QuoteService
         $cached = $this->cache->get($key, function (ItemInterface $item) use ($pickupAddress, $destination, $declaredValue, $salesChannelId): array {
             $item->expiresAfter($this->config->getInt('quoteCacheTtl', 600, $salesChannelId));
 
-            return ['fee' => $this->requestFee($pickupAddress, $destination, $declaredValue, $salesChannelId), 'fetchedAt' => new \DateTimeImmutable()];
+            if ($this->wasUnreachable($salesChannelId)) {
+                throw new ChowdeckApiException(ApiErrorReason::Network, 'Chowdeck could not be reached less than a minute ago; not calling it again yet.');
+            }
+
+            try {
+                return ['fee' => $this->requestFee($pickupAddress, $destination, $declaredValue, $salesChannelId), 'fetchedAt' => new \DateTimeImmutable()];
+            } catch (ChowdeckApiException $e) {
+                if (\in_array($e->getReason(), [ApiErrorReason::Timeout, ApiErrorReason::Network], true)) {
+                    $this->markUnreachable($salesChannelId);
+                }
+
+                throw $e;
+            }
         });
 
         $fee = $cached['fee'];
 
         return new QuoteStruct($fee->id, $fee->totalAmount, $this->withMarkup($fee->totalAmount, $salesChannelId), WalletBalance::CURRENCY, $cached['fetchedAt']);
+    }
+
+    private function wasUnreachable(string $salesChannelId): bool
+    {
+        return $this->cache->get('kmh_cd_unreachable_' . $salesChannelId, static function (ItemInterface $item, bool &$save): bool {
+            $save = false;
+
+            return false;
+        });
+    }
+
+    private function markUnreachable(string $salesChannelId): void
+    {
+        $key = 'kmh_cd_unreachable_' . $salesChannelId;
+        $this->cache->delete($key);
+        $this->cache->get($key, static function (ItemInterface $item): bool {
+            $item->expiresAfter(self::UNREACHABLE_TTL);
+
+            return true;
+        });
     }
 
     /**

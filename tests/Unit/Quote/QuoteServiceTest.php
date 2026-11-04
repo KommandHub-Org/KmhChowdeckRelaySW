@@ -211,6 +211,25 @@ class QuoteServiceTest extends TestCase
         static::assertStringNotContainsString('sk_test_key', (string)json_encode($this->logs));
     }
 
+    public function testUnreachableChowdeckIsNotCalledAgainForAMinute(): void
+    {
+        $service = $this->service(self::CONFIG, [new MockResponse('', ['error' => 'Could not resolve host'])]);
+
+        static::assertSame(QuoteError::Unavailable, $service->quote(CheckoutFixture::cart(), CheckoutFixture::context()));
+        static::assertSame(QuoteError::Unavailable, $service->quote(CheckoutFixture::cart(), CheckoutFixture::context()));
+        static::assertCount(1, $this->feeBodies);
+        static::assertStringContainsString('not calling it again yet', $this->logs[1][2]['message']);
+    }
+
+    public function testServerErrorIsRetriedOnTheNextQuote(): void
+    {
+        $service = $this->service(self::CONFIG, [new MockResponse('', ['http_code' => 503]), ClientFactory::ok(['id' => 7, 'total_amount' => 150000])]);
+
+        static::assertSame(QuoteError::Unavailable, $service->quote(CheckoutFixture::cart(), CheckoutFixture::context()));
+        static::assertInstanceOf(QuoteStruct::class, $service->quote(CheckoutFixture::cart(), CheckoutFixture::context()));
+        static::assertCount(2, $this->feeBodies);
+    }
+
     /**
      * Request rider takes a fresh fee for the placed order, never from the cache.
      */
